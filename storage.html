@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE選択 / Select Storage</title>
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <main>
@@ -23,13 +23,11 @@
   </footer>
 
   <script>
-    // 現在の操作を表示 / Display current action
     const params = new URLSearchParams(window.location.search);
     const action = params.get("action") || "borrow";
     document.getElementById("currentAction").textContent = action;
     document.getElementById("currentActionEn").textContent = action;
 
-    // 倉庫選択後の遷移 / Go to next page
     function chooseStorage(storage) {
       window.location.href = `borrow.html?storage=${storage}&action=${action}`;
     }

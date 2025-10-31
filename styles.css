@@ -1,7 +1,7 @@
 /* 全体のスタイル / General Styles */
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #4da3ff, #a1c4fd); /* gradient background */
+  background: linear-gradient(135deg, #4da3ff 20%, #a1c4fd 50%, #ffffff 80%);
   color: #333;
   text-align: center;
   margin: 0;
@@ -17,21 +17,23 @@ main {
 button {
   display: block;
   margin: 12px auto;
-  padding: 18px 36px;      /* phone-friendly size */
-  font-size: 1.6rem;       
+  padding: 18px 36px;
+  font-size: 1.6rem;
   font-weight: bold;
   color: white;
-  background-color: #4da3ff; 
+  background: linear-gradient(135deg, #1a3f6f, #274b87); /* navy gradient */
   border: none;
   border-radius: 12px;
   cursor: pointer;
   width: 90%;
-  max-width: 300px;        
-  transition: background 0.3s;
+  max-width: 300px;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 button:hover:not(:disabled) {
-  background-color: #3399ff;
+  background: linear-gradient(135deg, #0f2b55, #1f3b75); /* darker on hover */
+  transform: translateY(-2px);
 }
 
 button:disabled {
