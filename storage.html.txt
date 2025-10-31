@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>倉庫選択 / Select Storage</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    button { margin: 5px; padding: 10px 20px; font-size: 16px; }
+    button:disabled { opacity: 0.5; }
+  </style>
+</head>
+<body>
+  <h2>倉庫を選択してください / Select a Storage</h2>
+  <p>
+    現在の操作: <strong id="actionLabel"></strong><br>
+    Current Action: <strong id="actionLabelEn"></strong>
+  </p>
+
+  <button onclick="chooseStorage('Storage1')">倉庫1 (北側) / Storage 1 (North)</button>
+  <button onclick="chooseStorage('Storage4')">倉庫4 / Storage 4</button>
+
+  <button disabled>倉庫2（準備中） / Storage 2 (Coming Soon)</button>
+  <button disabled>倉庫3（準備中） / Storage 3 (Coming Soon)</button>
+
+  <script>
+    // Load current action from sessionStorage
+    const action = sessionStorage.getItem('currentAction') || 'borrow';
+    document.getElementById('actionLabel').innerText = action;
+    document.getElementById('actionLabelEn').innerText = action;
+
+    function chooseStorage(storage) {
+      sessionStorage.setItem('currentStorage', storage);
+      // Navigate to borrow page
+      window.location.href = 'borrow.html';
+    }
+  </script>
+</body>
+</html>

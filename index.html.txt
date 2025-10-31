@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>貸出システム / Lending System</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    button { margin: 5px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>📦 貸出システム / Lending System</h2>
+  <p>操作を選択してください。<br>Select an action below:</p>
+
+  <button onclick="goTo('borrow')">貸出 / Borrow</button>
+  <button onclick="goTo('return')">返却 / Return</button>
+  <button onclick="goTo('adjust')">調整 / Adjust</button>
+  <button onclick="goTo('view')">在庫を見る / View Inventory</button>
+
+  <script>
+    function goTo(action) {
+      // Save selected action to sessionStorage
+      sessionStorage.setItem('currentAction', action);
+      // Navigate to storage selection page
+      window.location.href = 'storage.html';
+    }
+  </script>
+</body>
+</html>
