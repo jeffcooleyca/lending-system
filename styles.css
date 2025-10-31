@@ -1,88 +1,75 @@
-/* styles.css — shared styling */
-/* 日本語コメント付き / With Japanese comments */
+/* ============================
+   共通スタイル / Shared Styles
+   ============================ */
 
+/* ページ全体の背景グラデーション
+   Soft blue gradient background */
 body {
-  font-family: "Segoe UI", "Noto Sans JP", sans-serif;
-  padding: 20px;
-  max-width: 480px;
-  margin: 0 auto;
-  background: linear-gradient(180deg, #E3F2FD 0%, #FFFFFF 100%);
+  font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: linear-gradient(180deg, #e6f0ff 0%, #cce0ff 50%, #99c2ff 100%);
+  color: #003366;
+  text-align: center;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   min-height: 100vh;
 }
 
+/* ページタイトル */
 h2 {
-  text-align: center;
-  color: #0D47A1;
-  margin-top: 20px;
-  margin-bottom: 15px;
+  margin-top: 30px;
+  color: #003366;
 }
 
+/* 説明テキスト */
 p {
-  text-align: center;
-  margin-bottom: 20px;
+  font-size: 1rem;
+  margin: 15px auto;
+  width: 90%;
   line-height: 1.4;
 }
 
+/* ボタンデザイン (統一) */
 button {
   display: block;
-  margin: 12px 0;
-  padding: 15px;
-  width: 100%;
-  font-size: 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: none;
+  margin: 10px auto;
+  padding: 12px 30px;
+  font-size: 1.1rem;
   color: white;
-  font-weight: 600;
-  transition: all 0.25s ease;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  background-color: #4da3ff; /* soft blue */
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 80%;
+  max-width: 300px;
 }
 
-/* ----- 各ボタンの色 / Button Colors ----- */
-button.borrow {
-  background: linear-gradient(90deg, #4FC3F7, #0288D1);
-}
-button.return {
-  background: linear-gradient(90deg, #64B5F6, #1976D2);
-}
-button.adjust {
-  background: linear-gradient(90deg, #42A5F5, #1565C0);
-}
-button.view {
-  background: linear-gradient(90deg, #5C6BC0, #283593);
-}
-
-/* Hover effects */
 button:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  opacity: 0.95;
+  background-color: #1e90ff; /* darker blue on hover */
 }
 
-/* Disabled buttons */
-button.disabled {
-  background: linear-gradient(90deg, #B0BEC5, #CFD8DC);
-  color: #666;
+button:disabled {
+  background-color: #cccccc;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
-/* フッター / Footer (for logo) */
+/* フッター領域 / Footer */
 footer {
-  margin-top: auto;
-  text-align: center;
-  padding: 15px 0;
+  padding: 10px;
+  background: rgba(255,255,255,0.6);
+  border-top: 1px solid #99c2ff;
 }
 
 footer img {
-  max-width: 150px;
-  opacity: 0.85;
+  height: 60px;
+  margin-top: 5px;
 }
 
 footer p {
-  font-size: 13px;
-  color: #607D8B;
-  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #004080;
+  margin: 5px 0;
 }

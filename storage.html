@@ -3,33 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>倉庫選択 / Select Storage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h2>倉庫を選択してください / Select a Storage</h2>
-  <p>
-    現在の操作: <strong id="currentAction"></strong><br>
-    Current Action: <strong id="currentActionEN"></strong>
-  </p>
+  <main>
+    <h2>倉庫を選択してください / Select a Storage</h2>
+    <p id="actionDisplay">現在の操作: <strong></strong></p>
 
-  <button class="enabled" onclick="chooseStorage('Storage1')">倉庫1 (北側) / Storage 1 (North)</button>
-  <button class="enabled" onclick="chooseStorage('Storage4')">倉庫4 / Storage 4</button>
-  <button class="disabled" disabled>倉庫2（準備中） / Storage 2 (Coming Soon)</button>
-  <button class="disabled" disabled>倉庫3（準備中） / Storage 3 (Coming Soon)</button>
+    <button onclick="chooseStorage('Storage1')">倉庫1 (北側) / Storage 1 (North)</button>
+    <button onclick="chooseStorage('Storage4')">倉庫4 / Storage 4</button>
+
+    <button disabled>倉庫2（準備中） / Storage 2 (Coming Soon)</button>
+    <button disabled>倉庫3（準備中） / Storage 3 (Coming Soon)</button>
+  </main>
+
+  <footer>
+    <img id="companyLogo" src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ">
+    <p>© 2025 Your Company Name</p>
+  </footer>
 
   <script>
+    // ページ読み込み時にURLパラメータから操作を取得 / Show current action
     const params = new URLSearchParams(window.location.search);
-    const action = params.get("action") || "borrow";
+    const action = params.get('action') || 'borrow';
+    document.querySelector('#actionDisplay strong').textContent = action.toUpperCase();
 
-    document.getElementById("currentAction").textContent =
-      action === "borrow" ? "貸出" :
-      action === "return" ? "返却" :
-      action;
-
-    document.getElementById("currentActionEN").textContent =
-      action.charAt(0).toUpperCase() + action.slice(1);
-
+    // 次のページへ / Proceed to next step
     function chooseStorage(storage) {
       window.location.href = `borrow.html?action=${action}&storage=${storage}`;
     }

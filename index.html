@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>貸出システム / Lending System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h2>📦 貸出システム / Lending System</h2>
-  <p>操作を選択してください。<br>Select an action below:</p>
+  <main>
+    <h2>📦 貸出システム / Lending System</h2>
+    <p>操作を選択してください。<br>Select an action below:</p>
 
-  <button class="borrow" onclick="goTo('borrow')">貸出 / Borrow</button>
-  <button class="return" onclick="goTo('return')">返却 / Return</button>
-  <button class="adjust" onclick="goTo('adjust')">調整 / Adjust</button>
-  <button class="view" onclick="goTo('view')">在庫を見る / View Inventory</button>
+    <button onclick="goTo('borrow')">貸出 / Borrow</button>
+    <button onclick="goTo('return')">返却 / Return</button>
+    <button onclick="goTo('adjust')">調整 / Adjust</button>
+    <button onclick="goTo('view')">在庫を見る / View Inventory</button>
+  </main>
 
   <footer>
-    <!-- 🏢 会社ロゴ / Company Logo -->
-    <img src="画像Ca1.jpg" alt="Company Logo">
+    <img id="companyLogo" src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ">
     <p>© 2025 Your Company Name</p>
   </footer>
 
   <script>
+    // ページ遷移 / Navigation
     function goTo(action) {
       window.location.href = `storage.html?action=${action}`;
     }
