@@ -1,16 +1,20 @@
-/* styles.css — shared across all pages */
+/* styles.css — shared styling */
+/* 日本語コメント付き / With Japanese comments */
 
 body {
-  font-family: sans-serif;
+  font-family: "Segoe UI", "Noto Sans JP", sans-serif;
   padding: 20px;
   max-width: 480px;
   margin: 0 auto;
-  background: #ffffff;
+  background: linear-gradient(180deg, #E3F2FD 0%, #FFFFFF 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 h2 {
   text-align: center;
-  color: #1565C0; /* dark blue */
+  color: #0D47A1;
   margin-top: 20px;
   margin-bottom: 15px;
 }
@@ -22,57 +26,63 @@ p {
 }
 
 button {
-  margin: 10px 0;
+  display: block;
+  margin: 12px 0;
   padding: 15px;
   width: 100%;
   font-size: 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   border: none;
+  color: white;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
+/* ----- 各ボタンの色 / Button Colors ----- */
 button.borrow {
-  background: linear-gradient(90deg, #4FC3F7, #0288D1); /* main action */
-  color: white;
-}
-
-button.return {
-  background: #81D4FA;
-  color: #0D47A1;
-}
-
-button.adjust {
-  background: #FFB74D;
-  color: white;
-}
-
-button.view {
-  background: #7986CB;
-  color: white;
-}
-
-button.enabled {
   background: linear-gradient(90deg, #4FC3F7, #0288D1);
-  color: white;
+}
+button.return {
+  background: linear-gradient(90deg, #64B5F6, #1976D2);
+}
+button.adjust {
+  background: linear-gradient(90deg, #42A5F5, #1565C0);
+}
+button.view {
+  background: linear-gradient(90deg, #5C6BC0, #283593);
 }
 
+/* Hover effects */
+button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  opacity: 0.95;
+}
+
+/* Disabled buttons */
 button.disabled {
-  background: #cccccc;
-  color: #666666;
+  background: linear-gradient(90deg, #B0BEC5, #CFD8DC);
+  color: #666;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
+/* フッター / Footer (for logo) */
+footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 15px 0;
 }
 
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  font-size: 16px;
-  border-radius: 5px;
-  box-sizing: border-box;
+footer img {
+  max-width: 150px;
+  opacity: 0.85;
+}
+
+footer p {
+  font-size: 13px;
+  color: #607D8B;
+  margin-top: 8px;
 }
