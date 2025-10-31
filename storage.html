@@ -3,44 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>倉庫選択 / Select Storage</title>
-  <link rel="stylesheet" href="styles.css?v=5">
+  <title>STORAGE選択 / Select Storage</title>
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
   <main>
-    <!-- Page Title -->
-    <h2>倉庫を選択してください / Select a Storage</h2>
-    <p id="actionDisplay">現在の操作: <strong></strong><br>
-       Current Action: <strong></strong></p>
+    <h2>STORAGEを選択してください / Select a Storage</h2>
+    <p>現在の操作: <strong id="currentAction"></strong><br>Current Action: <strong id="currentActionEn"></strong></p>
 
-    <!-- Active Storage Buttons -->
     <button onclick="chooseStorage('STORAGE1A')">STORAGE1A</button>
     <button onclick="chooseStorage('STORAGE1B')">STORAGE1B</button>
     <button onclick="chooseStorage('STORAGE4')">STORAGE4</button>
-
-    <!-- Disabled / Coming Soon -->
-    <button disabled>STORAGE2 （準備中）</button>
-    <button disabled>STORAGE3 （準備中）</button>
+    <button disabled>STORAGE2（準備中） / Coming Soon</button>
+    <button disabled>STORAGE3（準備中） / Coming Soon</button>
   </main>
 
-  <!-- Footer -->
   <footer>
     <p>© 2025 クリエイティブエージェント（株）</p>
   </footer>
 
   <script>
-    // Show current action from URL parameters
+    // 現在の操作を表示 / Display current action
     const params = new URLSearchParams(window.location.search);
-    const action = params.get('action') || 'borrow';
-    
-    // Update action display (both Japanese and English)
-    const actionDisplay = document.querySelector('#actionDisplay');
-    actionDisplay.querySelectorAll('strong')[0].textContent = action; // Japanese
-    actionDisplay.querySelectorAll('strong')[1].textContent = action.toUpperCase(); // English
+    const action = params.get("action") || "borrow";
+    document.getElementById("currentAction").textContent = action;
+    document.getElementById("currentActionEn").textContent = action;
 
-    // Navigate to borrow page (next step)
+    // 倉庫選択後の遷移 / Go to next page
     function chooseStorage(storage) {
-      window.location.href = `borrow.html?action=${action}&storage=${storage}`;
+      window.location.href = `borrow.html?storage=${storage}&action=${action}`;
     }
   </script>
 </body>
