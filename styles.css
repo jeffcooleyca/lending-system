@@ -2,8 +2,7 @@
    共通スタイル / Shared Styles
    ============================ */
 
-/* ページ全体の背景グラデーション
-   Soft blue gradient background */
+/* ページ全体の背景グラデーション / Soft blue gradient background */
 body {
   font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', sans-serif;
   background: linear-gradient(180deg, #e6f0ff 0%, #cce0ff 50%, #99c2ff 100%);
@@ -17,13 +16,13 @@ body {
   min-height: 100vh;
 }
 
-/* ページタイトル */
+/* ページタイトル / Page title */
 h2 {
   margin-top: 30px;
   color: #003366;
 }
 
-/* 説明テキスト */
+/* 説明テキスト / Description */
 p {
   font-size: 1rem;
   margin: 15px auto;
@@ -31,24 +30,25 @@ p {
   line-height: 1.4;
 }
 
-/* ボタンデザイン (統一) */
+/* ボタンデザイン / Buttons */
 button {
   display: block;
-  margin: 10px auto;
-  padding: 12px 30px;
-  font-size: 1.1rem;
+  margin: 15px auto;
+  padding: 18px 40px;
+  font-size: 1.4rem;
+  font-weight: bold;
   color: white;
   background-color: #4da3ff; /* soft blue */
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 80%;
-  max-width: 300px;
+  width: 85%;
+  max-width: 350px;
 }
 
 button:hover {
-  background-color: #1e90ff; /* darker blue on hover */
+  background-color: #1e90ff; /* darker blue */
 }
 
 button:disabled {
@@ -56,25 +56,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* フッター領域 / Footer */
-footer {
-  padding: 10px;
-  background: rgba(255,255,255,0.6);
-  border-top: 1px solid #99c2ff;
-}
-
-footer img {
-  height: 60px;
-  margin-top: 5px;
-}
-
-footer p {
-  font-size: 0.9rem;
-  color: #004080;
-  margin: 5px 0;
-}
-
-/* --- Logo Styling / ロゴのスタイル --- */
+/* ロゴ / Logo (only applied if <img class="company-logo"> exists) */
 .logo-container {
   display: flex;
   justify-content: center;
@@ -91,4 +73,26 @@ footer p {
 
 .company-logo:hover {
   opacity: 1;
+}
+
+/* フッター / Footer */
+footer {
+  padding: 10px;
+  background: rgba(255,255,255,0.6);
+  border-top: 1px solid #99c2ff;
+}
+
+footer p {
+  font-size: 0.9rem;
+  color: #004080;
+  margin: 5px 0;
+}
+
+/* モバイル向け / Mobile adjustments */
+@media screen and (max-width: 600px) {
+  button {
+    padding: 22px 50px;
+    font-size: 1.6rem;
+    max-width: 90%;
+  }
 }
