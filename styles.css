@@ -73,3 +73,22 @@ footer p {
   color: #004080;
   margin: 5px 0;
 }
+
+/* --- Logo Styling / ロゴのスタイル --- */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.company-logo {
+  width: 200px;
+  height: auto;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.company-logo:hover {
+  opacity: 1;
+}

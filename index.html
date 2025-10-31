@@ -7,22 +7,29 @@
 </head>
 <body>
   <main>
+    <!-- Page Title -->
     <h2>📦 貸出システム / Lending System</h2>
     <p>操作を選択してください。<br>Select an action below:</p>
 
+    <!-- Action Buttons -->
     <button onclick="goTo('borrow')">貸出 / Borrow</button>
     <button onclick="goTo('return')">返却 / Return</button>
     <button onclick="goTo('adjust')">調整 / Adjust</button>
     <button onclick="goTo('view')">在庫を見る / View Inventory</button>
+
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ" class="company-logo">
+    </div>
   </main>
 
+  <!-- Footer -->
   <footer>
-    <img id="companyLogo" src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ">
     <p>© 2025 Your Company Name</p>
   </footer>
 
   <script>
-    // ページ遷移 / Navigation
+    // Navigate to Storage Selection page (Page 2)
     function goTo(action) {
       window.location.href = `storage.html?action=${action}`;
     }

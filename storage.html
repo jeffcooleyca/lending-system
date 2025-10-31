@@ -7,28 +7,40 @@
 </head>
 <body>
   <main>
+    <!-- Page Title -->
     <h2>倉庫を選択してください / Select a Storage</h2>
-    <p id="actionDisplay">現在の操作: <strong></strong></p>
+    <p id="actionDisplay">現在の操作: <strong></strong><br>
+       Current Action: <strong></strong></p>
 
+    <!-- Storage Buttons -->
     <button onclick="chooseStorage('Storage1')">倉庫1 (北側) / Storage 1 (North)</button>
     <button onclick="chooseStorage('Storage4')">倉庫4 / Storage 4</button>
 
     <button disabled>倉庫2（準備中） / Storage 2 (Coming Soon)</button>
     <button disabled>倉庫3（準備中） / Storage 3 (Coming Soon)</button>
+
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ" class="company-logo">
+    </div>
   </main>
 
+  <!-- Footer -->
   <footer>
-    <img id="companyLogo" src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ">
     <p>© 2025 Your Company Name</p>
   </footer>
 
   <script>
-    // ページ読み込み時にURLパラメータから操作を取得 / Show current action
+    // Show current action from URL parameters
     const params = new URLSearchParams(window.location.search);
     const action = params.get('action') || 'borrow';
-    document.querySelector('#actionDisplay strong').textContent = action.toUpperCase();
+    
+    // Update action display (both Japanese and English)
+    const actionDisplay = document.querySelector('#actionDisplay');
+    actionDisplay.querySelectorAll('strong')[0].textContent = action; // Japanese
+    actionDisplay.querySelectorAll('strong')[1].textContent = action.toUpperCase(); // English
 
-    // 次のページへ / Proceed to next step
+    // Navigate to borrow page (next step)
     function chooseStorage(storage) {
       window.location.href = `borrow.html?action=${action}&storage=${storage}`;
     }
