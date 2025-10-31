@@ -2,8 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>貸出システム / Lending System</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <main>
@@ -17,19 +18,19 @@
     <button onclick="goTo('adjust')">調整 / Adjust</button>
     <button onclick="goTo('view')">在庫を見る / View Inventory</button>
 
-    <!-- Logo -->
-    <div class="logo-container">
-      <img src="CA_Logo.jpg" alt="Company Logo / 会社ロゴ" class="company-logo">
+    <!-- Company Logo -->
+    <div style="margin-top:40px;">
+      <img src="CA_Logo.jpg" alt="Company Logo" style="max-width: 200px; width: 50%; height: auto;">
     </div>
   </main>
 
   <!-- Footer -->
   <footer>
-    <p>© 2025 Your Company Name</p>
+    <p>© 2025 クリエイティブエージェント（株）</p>
   </footer>
 
   <script>
-    // Navigate to Storage Selection page (Page 2)
+    // Navigate to storage page with action parameter
     function goTo(action) {
       window.location.href = `storage.html?action=${action}`;
     }
