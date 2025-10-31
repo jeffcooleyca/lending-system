@@ -1,0 +1,78 @@
+/* styles.css — shared across all pages */
+
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+
+h2 {
+  text-align: center;
+  color: #1565C0; /* dark blue */
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+p {
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+button {
+  margin: 10px 0;
+  padding: 15px;
+  width: 100%;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+button.borrow {
+  background: linear-gradient(90deg, #4FC3F7, #0288D1); /* main action */
+  color: white;
+}
+
+button.return {
+  background: #81D4FA;
+  color: #0D47A1;
+}
+
+button.adjust {
+  background: #FFB74D;
+  color: white;
+}
+
+button.view {
+  background: #7986CB;
+  color: white;
+}
+
+button.enabled {
+  background: linear-gradient(90deg, #4FC3F7, #0288D1);
+  color: white;
+}
+
+button.disabled {
+  background: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}

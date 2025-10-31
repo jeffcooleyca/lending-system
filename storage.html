@@ -1,63 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <title>倉庫選択 / Select Storage</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      body {
-        font-family: sans-serif;
-        padding: 20px;
-        max-width: 480px;
-        margin: 0 auto;
-      }
-      h2 {
-        margin-top: 20px;
-        margin-bottom: 15px;
-        text-align: center;
-      }
-      p {
-        margin-bottom: 20px;
-        line-height: 1.4;
-      }
-      button {
-        margin: 10px 0;
-        padding: 15px;
-        width: 100%;
-        font-size: 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: none;
-      }
-      button.enabled { background-color: #4CAF50; color: white; }
-      button.disabled { background-color: #cccccc; color: #666; cursor: not-allowed; }
-    </style>
-  </head>
-  <body>
-    <h2>倉庫を選択してください / Select a Storage</h2>
-    <p>
-      現在の操作: <strong id="currentAction"></strong><br>
-      Current Action: <strong id="currentActionEN"></strong>
-    </p>
+<head>
+  <meta charset="UTF-8">
+  <title>倉庫選択 / Select Storage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h2>倉庫を選択してください / Select a Storage</h2>
+  <p>
+    現在の操作: <strong id="currentAction"></strong><br>
+    Current Action: <strong id="currentActionEN"></strong>
+  </p>
 
-    <button class="enabled" onclick="chooseStorage('Storage1')">倉庫1 (北側) / Storage 1 (North)</button>
-    <button class="enabled" onclick="chooseStorage('Storage4')">倉庫4 / Storage 4</button>
-    <button class="disabled" disabled>倉庫2（準備中） / Storage 2 (Coming Soon)</button>
-    <button class="disabled" disabled>倉庫3（準備中） / Storage 3 (Coming Soon)</button>
+  <button class="enabled" onclick="chooseStorage('Storage1')">倉庫1 (北側) / Storage 1 (North)</button>
+  <button class="enabled" onclick="chooseStorage('Storage4')">倉庫4 / Storage 4</button>
+  <button class="disabled" disabled>倉庫2（準備中） / Storage 2 (Coming Soon)</button>
+  <button class="disabled" disabled>倉庫3（準備中） / Storage 3 (Coming Soon)</button>
 
-    <script>
-      // Get the action from URL params
-      const params = new URLSearchParams(window.location.search);
-      const action = params.get("action") || "borrow";
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get("action") || "borrow";
 
-      // Display action in both languages
-      document.getElementById("currentAction").textContent = action === "borrow" ? "貸出" : action === "return" ? "返却" : action;
-      document.getElementById("currentActionEN").textContent = action.charAt(0).toUpperCase() + action.slice(1);
+    document.getElementById("currentAction").textContent =
+      action === "borrow" ? "貸出" :
+      action === "return" ? "返却" :
+      action;
 
-      // Navigate to borrow page (example)
-      function chooseStorage(storage) {
-        window.location.href = `borrow.html?action=${action}&storage=${storage}`;
-      }
-    </script>
-  </body>
+    document.getElementById("currentActionEN").textContent =
+      action.charAt(0).toUpperCase() + action.slice(1);
+
+    function chooseStorage(storage) {
+      window.location.href = `borrow.html?action=${action}&storage=${storage}`;
+    }
+  </script>
+</body>
 </html>

@@ -1,54 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <title>貸出システム / Lending System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      body {
-        font-family: sans-serif;
-        padding: 20px;
-        max-width: 480px;
-        margin: 0 auto;
-      }
-      h2 {
-        margin-top: 20px;
-        margin-bottom: 15px;
-        text-align: center;
-      }
-      p {
-        margin-bottom: 20px;
-        line-height: 1.4;
-      }
-      button {
-        margin: 10px 0;
-        padding: 15px;
-        width: 100%;
-        font-size: 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: none;
-      }
-      button.borrow { background-color: #4CAF50; color: white; }
-      button.return { background-color: #2196F3; color: white; }
-      button.adjust { background-color: #FF9800; color: white; }
-      button.view { background-color: #9C27B0; color: white; }
-    </style>
-  </head>
-  <body>
-    <h2>📦 貸出システム / Lending System</h2>
-    <p>操作を選択してください。<br>Select an action below:</p>
+<head>
+  <meta charset="UTF-8">
+  <title>貸出システム / Lending System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h2>📦 貸出システム / Lending System</h2>
+  <p>操作を選択してください。<br>Select an action below:</p>
 
-    <button class="borrow" onclick="goTo('borrow')">貸出 / Borrow</button>
-    <button class="return" onclick="goTo('return')">返却 / Return</button>
-    <button class="adjust" onclick="goTo('adjust')">調整 / Adjust</button>
-    <button class="view" onclick="goTo('view')">在庫を見る / View Inventory</button>
+  <button class="borrow" onclick="goTo('borrow')">貸出 / Borrow</button>
+  <button class="return" onclick="goTo('return')">返却 / Return</button>
+  <button class="adjust" onclick="goTo('adjust')">調整 / Adjust</button>
+  <button class="view" onclick="goTo('view')">在庫を見る / View Inventory</button>
 
-    <script>
-      function goTo(action) {
-        // Navigate to storage selection page with selected action
-        window.location.href = `storage.html?action=${action}`;
-      }
-    </script>
-  </body>
+  <script>
+    function goTo(action) {
+      window.location.href = `storage.html?action=${action}`;
+    }
+  </script>
+</body>
 </html>
