@@ -1,41 +1,108 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STORAGE選択 / Select Storage</title>
-  <link rel="stylesheet" href="styles.css?v=8">
+  <title>倉庫選択 | Creative Agent</title>
+
+  <!-- 📄 共通スタイルシートの読み込み / Load shared stylesheet -->
+
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main>
-    <h2>STORAGEを選択してください / Select a Storage</h2>
-    <p>現在の操作: <strong id="currentAction"></strong><br>Current Action: <strong id="currentActionEn"></strong></p>
 
-    <button onclick="chooseStorage('STORAGE1A')">STORAGE1A</button>
-    <button onclick="chooseStorage('STORAGE1B')">STORAGE1B</button>
-    <button onclick="chooseStorage('STORAGE4')">STORAGE4</button>
-    <button disabled>STORAGE2（準備中)</button>
-    <button disabled>STORAGE3（準備中)</button>
-  </main>
+ 
+  <!-- 💬 挨拶文 / Welcome Message -->
 
-<footer>
-  <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
-</footer>
+  <h1 class="welcome-message">
+    クリエイティブエージェント（株）の倉庫管理システムへようこそ
+  </h1>
 
-<script>
-  // 年を自動更新 / Auto-update the year
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+  <!-- 🗃️ 倉庫選択セクション / Storage Selection Section -->
+
+  <h2 class="section-title">倉庫を選択してください / Select a Storage</h2>
+
+  <div class="button-container">
+
+```
+<!-- ============================= -->
+<!-- STORAGE1-A: ストック管理エリア -->
+<!-- ============================= -->
+<button class="storage-button" onclick="goTo('storage1a_action.html')">
+  <span class="button-title">STORAGE1</span><br>
+  <span class="button-subtitle">ストック管理</span>
+</button>
+
+<!-- ============================= -->
+<!-- STORAGE1-B: 仮置場エリア -->
+<!-- ============================= -->
+<button class="storage-button" onclick="goTo('storage1b_action.html')">
+  <span class="button-title">STORAGE1</span><br>
+  <span class="button-subtitle">仮置場</span>
+</button>
+
+<!-- ============================= -->
+<!-- STORAGE4: アクティブ -->
+<!-- ============================= -->
+<button class="storage-button" onclick="goTo('storage4_action.html')">
+  <span class="button-title">STORAGE4</span><br>
+</button>
+
+<!-- ============================= -->
+<!-- STORAGE2: 準備中 -->
+<!-- ============================= -->
+<button class="storage-button disabled" disabled>
+  <span class="button-title">STORAGE2</span><br>
+  <span class="button-subtitle">準備中</span>
+</button>
+
+<!-- ============================= -->
+<!-- STORAGE3: 準備中 -->
+<!-- ============================= -->
+<button class="storage-button disabled" disabled>
+  <span class="button-title">STORAGE3</span><br>
+  <span class="button-subtitle">準備中</span>
+</button>
+
+
+```
+
+  </div>
+ <!-- 🏢 ロゴ画像 / Company Logo -->
+
+  <!-- 同じフォルダ内に「CA_Logo.jpg」というファイル名で保存してください -->
+
+  <div class="logo-container">
+    <img src="CA_Logo.jpg" alt="Creative Agent Logo" class="company-logo">
+  </div>
+
+  <!-- ⚙️ ページ遷移スクリプト / Navigation Script -->
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const action = params.get("action") || "borrow";
-    document.getElementById("currentAction").textContent = action;
-    document.getElementById("currentActionEn").textContent = action;
-
-    function chooseStorage(storage) {
-      window.location.href = `borrow.html?storage=${storage}&action=${action}`;
+    /**
+     * 選択した倉庫ページへ移動する関数
+     * Function to navigate to the selected storage action page
+     * @param {string} page - 遷移先のHTMLファイル名 / Target HTML filename
+     */
+    function goTo(page) {
+      window.location.href = page;
     }
   </script>
+
+  <!-- 🧾 フッター / Footer -->
+
+  <footer>
+    <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
+  </footer>
+
+  <script>
+    /**
+     * 現在の年を自動的にフッターに表示
+     * Automatically displays the current year in the footer
+     */
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
