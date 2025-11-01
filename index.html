@@ -23,8 +23,13 @@
   </main>
 
   <footer>
-    <p>© 2025 クリエイティブエージェント（株）</p>
+    <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
   </footer>
+
+  <script>
+    // 年を自動更新 / Auto-update the year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 
   <script>
     function goTo(action) {
