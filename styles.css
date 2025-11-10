@@ -57,3 +57,77 @@ footer {
   font-size: 0.85rem;
   color: #222;
 }
+
+/* ======================================================== */
+/* STORAGE1-A 在庫表示 / View Inventory - STOCK & CONSUMABLES */
+/* ======================================================== */
+
+/* テーブル共通スタイル / Common table styling */
+table {
+  width: 100%;                /* 横幅100% / Full width */
+  border-collapse: collapse;  /* 枠線をまとめる / Collapse borders */
+  margin-bottom: 30px;        /* 下に余白 / Space below table */
+  font-size: 16px;            /* 文字サイズ / Font size */
+}
+
+/* テーブルヘッダー / Table header */
+table thead th {
+  background: linear-gradient(135deg, #1e3c72, #2a5298); /* 青系グラデーション / Blue gradient */
+  color: white;               /* 白文字 / White text */
+  padding: 10px;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid #ccc;
+}
+
+/* テーブル行 / Table rows */
+table tbody td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+/* テーブルフッター / Table footer */
+table tfoot td {
+  font-weight: bold;
+  padding: 10px;
+  border-top: 2px solid #000;
+  background-color: #f2f2f2;  /* 薄いグレー / Light gray */
+}
+
+/* 総在庫コストを目立たせる / Highlight total inventory cost */
+#totalInventoryCost {
+  color: #1e3c72;      /* 濃い青 / Dark blue */
+  font-size: 18px;
+}
+
+/* ストック品と消耗品の見出し / Stock & Consumables headers */
+h3 {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #2a5298;      /* 青系 / Blue */
+  border-bottom: 2px solid #2a5298;
+  padding-bottom: 5px;
+}
+
+/* レスポンシブ対応 / Responsive tables */
+@media (max-width: 600px) {
+  table, thead, tbody, th, td, tr {
+    display: block;     /* ブロック表示にして横スクロール / Make tables block for small screens */
+  }
+  thead tr {
+    display: none;      /* ヘッダーは非表示 / Hide headers */
+  }
+  tbody td {
+    position: relative;
+    padding-left: 50%;
+  }
+  tbody td::before {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    white-space: nowrap;
+    font-weight: bold;
+    content: attr(data-label); /* スマホ用ラベル / Label for mobile */
+  }
+}
+
