@@ -3,60 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>貸出システム / Lending System</title>
+  <title>貸出システム / Lending System - STORAGE1A</title>
+
+  <!-- 共通スタイルシート / Shared CSS -->
   <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <main>
-    <!-- =============================== -->
     <!-- メインタイトル / Main Title -->
-    <!-- =============================== -->
     <h2>📦 貸出システム / Lending System</h2>
 
-    <!-- =========================================== -->
     <!-- サブタイトル（倉庫名）/ Subheader (Storage) -->
-    <!-- =========================================== -->
     <h3>STORAGE1-A（ストック管理エリア）</h3>
 
-    <!-- =============================================== -->
     <!-- 操作選択メッセージ / Instruction for Action -->
-    <!-- =============================================== -->
     <p>操作を選択してください。<br>Select an action below:</p>
 
-    <!-- =============================================== -->
     <!-- 操作ボタン / Action Buttons -->
-    <!-- =============================================== -->
     <button onclick="goTo('borrow')">貸出 / Borrow</button>
     <button onclick="goTo('return')">返却 / Return</button>
     <button onclick="goTo('adjust')">調整 / Adjust</button>
     <button onclick="viewInventory()">在庫を見る / View Inventory</button>
 
-    <!-- =============================== -->
     <!-- ロゴ / Company Logo -->
-    <!-- =============================== -->
     <div style="margin-top:40px;">
       <img src="CA_Logo.jpg?v=9" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
     </div>
   </main>
 
-  <!-- =============================== -->
   <!-- フッター / Footer -->
-  <!-- =============================== -->
   <footer>
     <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
   </footer>
 
-  <!-- =============================== -->
   <!-- スクリプト / Scripts -->
-  <!-- =============================== -->
   <script>
-    // 年を自動更新 / Auto-update the year
+    // 現在の年を自動表示 / Automatically display current year
     document.getElementById("year").textContent = new Date().getFullYear();
 
     /**
      * goTo(action)
-     * 指定された操作ページに移動する関数
-     * Function to navigate to the selected action page
+     * 指定された操作ページに遷移 / Navigate to the selected action page
+     * 現在は単純にページ遷移 / Currently just redirects
      */
     function goTo(action) {
       window.location.href = `storage.html?action=${action}`;
@@ -64,44 +52,11 @@
 
     /**
      * viewInventory()
-     * STORAGE1-A の在庫を Web App から取得して新しいページに表示
-     * Fetch inventory from the Web App and open in a new page
+     * 「在庫を見る」ボタン用 / For "View Inventory" button
+     * storage1a_view.html を開く / Opens storage1a_view.html
      */
     function viewInventory() {
-      const webAppUrl = "https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec";
-      
-      // STORAGE1-A 固定 / STORAGE1-A fixed
-      const params = new URLSearchParams({ storage: "STORAGE1-A", action: "view" });
-
-      fetch(`${webAppUrl}?${params.toString()}`)
-        .then(response => response.json())
-        .then(data => {
-          // JSON を一時的に新しいページに表示
-          // Create a new page to show the table
-          const newWindow = window.open();
-          let html = `<h2>STORAGE1-A 在庫 / Inventory</h2>`;
-          html += `<table border="1" style="border-collapse:collapse;width:100%;text-align:center;">`;
-          html += "<tr>";
-          // ヘッダー / Table header
-          for (let key of Object.keys(data[0] || {})) {
-            html += `<th>${key}</th>`;
-          }
-          html += "</tr>";
-          // データ行 / Table rows
-          data.forEach(row => {
-            html += "<tr>";
-            for (let key in row) {
-              html += `<td>${row[key]}</td>`;
-            }
-            html += "</tr>";
-          });
-          html += "</table>";
-          newWindow.document.write(html);
-          newWindow.document.close();
-        })
-        .catch(error => {
-          alert("在庫取得中にエラーが発生しました / Error fetching inventory:\n" + error);
-        });
+      window.location.href = 'storage1a_view.html';
     }
   </script>
 </body>

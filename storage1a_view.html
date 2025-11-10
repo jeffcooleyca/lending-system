@@ -3,115 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>在庫確認 | STORAGE1-A</title>
+  <title>在庫一覧 / Inventory View - STORAGE1A</title>
+
+  <!-- 共通スタイルシート / Shared CSS -->
   <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <main>
-    <!-- =============================== -->
     <!-- メインタイトル / Main Title -->
-    <!-- =============================== -->
-    <h2>STORAGE1-A（ストック管理エリア）</h2>
-    <p>在庫を確認してください</p>
+    <h2>📦 STORAGE1A 在庫一覧 / Inventory View</h2>
 
-    <!-- =============================== -->
-    <!-- ストックテーブル / Stock Table -->
-    <!-- =============================== -->
-    <h3>ストック</h3>
-    <table id="stockTable">
+    <!-- サブタイトル / Subheader -->
+    <h3>STORAGE1-A（ストック管理エリア）</h3>
+
+    <!-- インストラクション / Instruction -->
+    <p>在庫を確認してください。<br>Check the inventory below:</p>
+
+    <!-- 在庫テーブル / Inventory Table -->
+    <table id="inventoryTable">
       <thead>
         <tr>
-          <th>品目名</th>
+          <th>品名</th>
           <th>数量</th>
           <th>単価</th>
           <th>合計金額</th>
         </tr>
       </thead>
-      <tbody></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="3">合計金額</td>
-          <td id="stockTotal">0</td>
-        </tr>
-      </tfoot>
+      <tbody>
+        <!-- データはJavaScriptで挿入されます / Data will be inserted via JavaScript -->
+      </tbody>
     </table>
 
-    <!-- =============================== -->
-    <!-- 消耗品テーブル / Consumables Table -->
-    <!-- =============================== -->
-    <h3>消耗品</h3>
-    <table id="consumablesTable">
-      <thead>
-        <tr>
-          <th>品目名</th>
-          <th>数量</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
+    <!-- 合計金額 / Total Inventory Value -->
+    <p id="totalCost">合計金額: 0</p>
   </main>
 
-  <!-- =============================== -->
   <!-- フッター / Footer -->
-  <!-- =============================== -->
   <footer>
     <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
   </footer>
 
+  <!-- スクリプト / Scripts -->
   <script>
     // 現在の年をフッターに表示 / Automatically display current year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // ===============================
-    // Web App URL / 必ず最新のデプロイURLに置き換える
-    // ===============================
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec';
+    // API URL for STORAGE1A
+    // STORAGE1A用のWebアプリURL / Your deployed Web App URL
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?action=view&storage=STORAGE1A';
 
-    // データ取得 / Fetch data from Web App
-    fetch(`${webAppUrl}?storage=STORAGE1-A&action=view`)
-      .then(response => response.json())
-      .then(data => {
-        let stockTotal = 0;
+    /**
+     * fetchInventory
+     * Google Sheetsから在庫データを取得してテーブルに表示する
+     * Fetches inventory data from Google Sheets via API and populates the table
+     */
+    async function fetchInventory() {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-        // ストック / Stock items
-        const stockTbody = document.querySelector("#stockTable tbody");
-        data.forEach(item => {
-          if(item.type === 'ストック') {
-            const tr = document.createElement("tr");
+        if (data.status === 'success') {
+          const tableBody = document.querySelector('#inventoryTable tbody');
+          tableBody.innerHTML = '';
 
-            const totalPrice = item.quantity * item.unitPrice;
-            stockTotal += totalPrice;
+          let totalInventoryCost = 0;
 
-            tr.innerHTML = `
+          data.items.forEach(item => {
+            // 消耗品の場合は単価と合計金額は表示しない / For consumables, omit unit price and total cost
+            const isConsumable = item.category === '消耗品';
+            const unitPrice = isConsumable ? '' : item.unitPrice;
+            const total = isConsumable ? '' : item.totalCost;
+
+            // 合計金額の計算（消耗品以外） / Running total for non-consumables
+            if (!isConsumable) totalInventoryCost += item.totalCost;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
               <td>${item.name}</td>
               <td>${item.quantity}</td>
-              <td>${item.unitPrice}</td>
-              <td>${totalPrice}</td>
+              <td>${unitPrice}</td>
+              <td>${total}</td>
             `;
-            stockTbody.appendChild(tr);
-          }
-        });
+            tableBody.appendChild(row);
+          });
 
-        document.getElementById("stockTotal").textContent = stockTotal;
+          document.getElementById('totalCost').textContent = `合計金額: ${totalInventoryCost.toLocaleString()} 円`;
+        } else {
+          alert('在庫データの取得に失敗しました / Failed to fetch inventory data');
+        }
+      } catch (error) {
+        console.error('Error fetching inventory:', error);
+        alert('エラーが発生しました / An error occurred while fetching inventory');
+      }
+    }
 
-        // 消耗品 / Consumables
-        const consumablesTbody = document.querySelector("#consumablesTable tbody");
-        data.forEach(item => {
-          if(item.type === '消耗品') {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${item.name}</td>
-              <td>${item.quantity}</td>
-            `;
-            consumablesTbody.appendChild(tr);
-          }
-        });
-      })
-      .catch(error => {
-        console.error("データ取得エラー:", error);
-        alert("在庫データの取得に失敗しました。");
-      });
+    // ページ読み込み時に在庫データを取得 / Fetch inventory on page load
+    window.addEventListener('DOMContentLoaded', fetchInventory);
   </script>
 </body>
 </html>
