@@ -3,141 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>在庫表示 / View Inventory - STORAGE1-A</title>
-  <!-- 共通スタイルシート / Shared stylesheet -->
+  <title>在庫確認 | STORAGE1-A</title>
   <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <main>
-    <!-- タイトル / Title -->
-    <h2>📋 STORAGE1-A 在庫一覧 / Inventory List</h2>
-    <p>倉庫: STORAGE1-A（ストック管理エリア）</p>
+    <!-- =============================== -->
+    <!-- メインタイトル / Main Title -->
+    <!-- =============================== -->
+    <h2>STORAGE1-A（ストック管理エリア）</h2>
+    <p>在庫を確認してください</p>
 
-    <!-- ======================================================== -->
-    <!-- ストック品テーブル / Stock Items Table -->
-    <!-- ======================================================== -->
-    <h3>ストック品 / Stock Items</h3>
+    <!-- =============================== -->
+    <!-- ストックテーブル / Stock Table -->
+    <!-- =============================== -->
+    <h3>ストック</h3>
     <table id="stockTable">
       <thead>
         <tr>
-          <th>アイテム名 / Item Name</th>
-          <th>数量 / Quantity</th>
-          <th>単価 / Unit Cost</th>
-          <th>合計 / Total Cost</th>
+          <th>品目名</th>
+          <th>数量</th>
+          <th>単価</th>
+          <th>合計金額</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- データはJSで挿入 / Rows inserted via JS -->
-      </tbody>
+      <tbody></tbody>
       <tfoot>
         <tr>
-          <td colspan="3"><strong>総在庫コスト / Total Inventory Cost</strong></td>
-          <td id="totalInventoryCost">0</td>
+          <td colspan="3">合計金額</td>
+          <td id="stockTotal">0</td>
         </tr>
       </tfoot>
     </table>
 
-    <!-- ======================================================== -->
-    <!-- 消耗品テーブル / Consumable Items Table -->
-    <!-- ======================================================== -->
-    <h3>消耗品 / Consumables</h3>
-    <table id="consumableTable">
+    <!-- =============================== -->
+    <!-- 消耗品テーブル / Consumables Table -->
+    <!-- =============================== -->
+    <h3>消耗品</h3>
+    <table id="consumablesTable">
       <thead>
         <tr>
-          <th>アイテム名 / Item Name</th>
-          <th>数量 / Quantity</th>
+          <th>品目名</th>
+          <th>数量</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- データはJSで挿入 / Rows inserted via JS -->
-      </tbody>
+      <tbody></tbody>
     </table>
 
-    <!-- ロゴ / Company Logo -->
-    <div style="margin-top:40px;">
-      <img src="CA_Logo.jpg?v=9" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
-    </div>
   </main>
 
+  <!-- =============================== -->
   <!-- フッター / Footer -->
+  <!-- =============================== -->
   <footer>
     <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
   </footer>
 
-  <!-- ======================================================== -->
-  <!-- スクリプト / Script -->
-  <!-- ======================================================== -->
   <script>
-    // 年を自動表示 / Auto-update year
+    // 現在の年をフッターに表示 / Automatically display current year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    /**
-     * fetchInventory()
-     * Google Apps Script Web Appから在庫データを取得 / Fetch inventory from GAS Web App
-     */
-    async function fetchInventory() {
-      try {
-        // 🔗 Web App URL (replace with your deployed URL)
-        const webAppUrl = "https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=storage1a&action=view";
+    // ===============================
+    // Web App URL / 必ず最新のデプロイURLに置き換える
+    // ===============================
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec';
 
-        const response = await fetch(webAppUrl);
-        const data = await response.json();
+    // データ取得 / Fetch data from Web App
+    fetch(`${webAppUrl}?storage=STORAGE1-A&action=view`)
+      .then(response => response.json())
+      .then(data => {
+        let stockTotal = 0;
 
-        if (data.status === "success") {
-          populateStockTable(data.stockItems, data.totalInventoryCost);
-          populateConsumableTable(data.consumableItems);
-        } else {
-          alert("在庫データ取得エラー / Error fetching inventory: " + data.message);
-        }
-      } catch (err) {
-        console.error(err);
-        alert("ネットワークエラー / Network error while fetching inventory.");
-      }
-    }
+        // ストック / Stock items
+        const stockTbody = document.querySelector("#stockTable tbody");
+        data.forEach(item => {
+          if(item.type === 'ストック') {
+            const tr = document.createElement("tr");
 
-    /**
-     * populateStockTable(items, totalCost)
-     * ストック品テーブルにデータを表示 / Populate stock table
-     */
-    function populateStockTable(items, totalCost) {
-      const tbody = document.querySelector("#stockTable tbody");
-      tbody.innerHTML = ""; // 既存データ削除 / Clear previous rows
+            const totalPrice = item.quantity * item.unitPrice;
+            stockTotal += totalPrice;
 
-      items.forEach(item => {
-        const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>${item.unitPrice}</td>
+              <td>${totalPrice}</td>
+            `;
+            stockTbody.appendChild(tr);
+          }
+        });
 
-        tr.innerHTML = `
-          <td>${item.name}</td>
-          <td>${item.quantity}</td>
-          <td>${item.unitCost}</td>
-          <td>${item.totalCost}</td>
-        `;
-        tbody.appendChild(tr);
+        document.getElementById("stockTotal").textContent = stockTotal;
+
+        // 消耗品 / Consumables
+        const consumablesTbody = document.querySelector("#consumablesTable tbody");
+        data.forEach(item => {
+          if(item.type === '消耗品') {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${item.name}</td>
+              <td>${item.quantity}</td>
+            `;
+            consumablesTbody.appendChild(tr);
+          }
+        });
+      })
+      .catch(error => {
+        console.error("データ取得エラー:", error);
+        alert("在庫データの取得に失敗しました。");
       });
-
-      document.getElementById("totalInventoryCost").textContent = totalCost;
-    }
-
-    /**
-     * populateConsumableTable(items)
-     * 消耗品テーブルにデータを表示 / Populate consumable table
-     */
-    function populateConsumableTable(items) {
-      const tbody = document.querySelector("#consumableTable tbody");
-      tbody.innerHTML = "";
-
-      items.forEach(item => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${item.name}</td>
-          <td>${item.quantity}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ページ読み込み時に実行 / Fetch inventory on page load
-    window.onload = fetchInventory;
   </script>
 </body>
 </html>
