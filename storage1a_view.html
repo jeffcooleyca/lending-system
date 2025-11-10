@@ -32,7 +32,7 @@
 
     /* Total inventory cost header */
     .total-cost {
-      background-color: #2a5298; /* same as collapsibles */
+      background-color: #2a5298;
       color: white;
       font-weight: bold;
       text-align: center;
@@ -50,7 +50,7 @@
       padding: 10px 0;
     }
 
-    /* Stock item cards: 2x4 grid */
+    /* Stock item cards: 2 columns × 4 rows, 25%/75% width */
     .item-card {
       background-color: white;
       border-radius: 8px;
@@ -59,13 +59,13 @@
       width: 90%;
       max-width: 600px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 25% 75%;
       grid-template-rows: repeat(4, auto);
       gap: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    /* Consumable cards: 2x1 grid */
+    /* Consumable cards: 2 columns × 2 rows, 25%/75% */
     .consumable-card {
       background-color: white;
       border-radius: 8px;
@@ -74,8 +74,8 @@
       width: 90%;
       max-width: 600px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: 1fr;
+      grid-template-columns: 25% 75%;
+      grid-template-rows: repeat(2, auto);
       gap: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
@@ -121,26 +121,26 @@
         let totalCost = 0;
 
         data.forEach(item => {
+          const qty = parseInt(item.unitQty) || 0;
+
           if (item.type === 'ストック') {
             const unitPrice = parseFloat(item.unitPrice) || 0;
-            const qty = parseInt(item.unitQty) || 0;
             const itemTotal = unitPrice * qty;
             totalCost += itemTotal;
 
             stockHtml += `
               <div class="item-card">
-                <div>品名: ${item.name}</div>
-                <div>数量: ${qty}</div>
-                <div>単価: ¥${unitPrice.toLocaleString()}</div>
-                <div>合計: ¥${itemTotal.toLocaleString()}</div>
+                <div>品名:</div><div>${item.name}</div>
+                <div>数量:</div><div>${qty}</div>
+                <div>単価:</div><div>¥${unitPrice.toLocaleString()}</div>
+                <div>合計:</div><div>¥${itemTotal.toLocaleString()}</div>
               </div>
             `;
           } else if (item.type === '消耗品') {
-            const qty = parseInt(item.unitQty) || 0;
             consumableHtml += `
               <div class="consumable-card">
-                <div>品名: ${item.name}</div>
-                <div>数量: ${qty}</div>
+                <div>品名:</div><div>${item.name}</div>
+                <div>数量:</div><div>${qty}</div>
               </div>
             `;
           }
