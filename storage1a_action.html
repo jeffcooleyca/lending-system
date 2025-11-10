@@ -8,32 +8,103 @@
 </head>
 <body>
   <main>
+    <!-- =============================== -->
+    <!-- メインタイトル / Main Title -->
+    <!-- =============================== -->
     <h2>📦 貸出システム / Lending System</h2>
+
+    <!-- =========================================== -->
+    <!-- サブタイトル（倉庫名）/ Subheader (Storage) -->
+    <!-- =========================================== -->
+    <h3>STORAGE1-A（ストック管理エリア）</h3>
+
+    <!-- =============================================== -->
+    <!-- 操作選択メッセージ / Instruction for Action -->
+    <!-- =============================================== -->
     <p>操作を選択してください。<br>Select an action below:</p>
 
+    <!-- =============================================== -->
+    <!-- 操作ボタン / Action Buttons -->
+    <!-- =============================================== -->
     <button onclick="goTo('borrow')">貸出 / Borrow</button>
     <button onclick="goTo('return')">返却 / Return</button>
     <button onclick="goTo('adjust')">調整 / Adjust</button>
-    <button onclick="goTo('view')">在庫を見る / View Inventory</button>
+    <button onclick="viewInventory()">在庫を見る / View Inventory</button>
 
+    <!-- =============================================== -->
+    <!-- 在庫表示用 / Inventory Display -->
+    <!-- =============================================== -->
+    <div id="inventoryDisplay" style="margin-top:20px;"></div>
+
+    <!-- =============================== -->
     <!-- ロゴ / Company Logo -->
+    <!-- =============================== -->
     <div style="margin-top:40px;">
       <img src="CA_Logo.jpg?v=8" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
     </div>
   </main>
 
+  <!-- =============================== -->
+  <!-- フッター / Footer -->
+  <!-- =============================== -->
   <footer>
     <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
   </footer>
 
+  <!-- =============================== -->
+  <!-- スクリプト / Scripts -->
+  <!-- =============================== -->
   <script>
-    // 年を自動更新 / Auto-update the year
+    // 現在の年を自動的に表示 / Automatically display the current year
     document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
 
-  <script>
+    // 操作ページに移動 / Navigate to action page
     function goTo(action) {
       window.location.href = `storage.html?action=${action}`;
+    }
+
+    // 在庫を取得して表示 / Fetch inventory from API and display
+    function viewInventory() {
+      const apiUrl = 'https://script.google.com/macros/s/AKfycbwjlcYtHr30JmDdQTG6SnYyl1z0rEbGrCwYtT1MtEmBfQyT3GhOHAa5ZNrbA4RGBhCZ/exec?action=view&storage=storage1a';
+
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('inventoryDisplay');
+          container.innerHTML = ''; // 以前のテーブルをクリア / Clear previous table
+
+          if (data.status === 'success') {
+            const table = document.createElement('table');
+            table.classList.add('inventory-table');
+
+            // ヘッダー行 / Header row
+            const headerRow = document.createElement('tr');
+            data.data[0].forEach(header => {
+              const th = document.createElement('th');
+              th.textContent = header;
+              headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // データ行 / Data rows
+            for (let i = 1; i < data.data.length; i++) {
+              const row = document.createElement('tr');
+              data.data[i].forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                row.appendChild(td);
+              });
+              table.appendChild(row);
+            }
+
+            container.appendChild(table);
+          } else {
+            container.textContent = 'エラー: ' + data.message;
+          }
+        })
+        .catch(err => {
+          document.getElementById('inventoryDisplay').textContent = '通信エラー: ' + err.message;
+        });
     }
   </script>
 </body>
