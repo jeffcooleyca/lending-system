@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STORAGE1A 在庫確認 / Inventory View</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+</head>
+<body>
+  <main>
+    <!-- メインタイトル / Main Title -->
+    <h2>📦 STORAGE1A 在庫確認 / Inventory View</h2>
+
+    <!-- ストック / Stock Items -->
+    <h3>ストック / Stock Items</h3>
+    <table id="stock-table" class="inventory-table">
+      <thead>
+        <tr>
+          <th>商品名 / Item Name</th>
+          <th>数量 / Quantity</th>
+          <th>単価 / Unit Cost</th>
+          <th>合計 / Total Cost</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">合計 / Total</td>
+          <td id="stock-total">0</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- 消耗品 / Consumables -->
+    <h3>消耗品 / Consumables</h3>
+    <table id="consumable-table" class="inventory-table">
+      <thead>
+        <tr>
+          <th>商品名 / Item Name</th>
+          <th>数量 / Quantity</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">合計 / Total</td>
+          <td id="consumable-total"></td> <!-- optional: can count total quantity if needed -->
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- 全体合計（ストックのみ） / Overall Total (Stock Only) -->
+    <h3>在庫合計 / Inventory Overall Total: <span id="overall-total">0</span></h3>
+
+    <!-- ロゴ / Company Logo -->
+    <div style="margin-top:40px;">
+      <img src="CA_Logo.jpg?v=8" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
+    </div>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
+  </footer>
+
+  <script>
+    // 年を自動更新 / Auto-update the year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const API_URL = "https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?action=view&storage=STORAGE1A";
+
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          populateStockTable(data.stockItems);
+          populateConsumableTable(data.consumableItems);
+        } else {
+          alert("エラー / Error: " + data.message);
+        }
+      })
+      .catch(err => console.error("通信エラー / Fetch error:", err));
+
+    function populateStockTable(items) {
+      const tbody = document.querySelector("#stock-table tbody");
+      tbody.innerHTML = "";
+      let sum = 0;
+      items.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = item.name;
+        tr.appendChild(tdName);
+
+        const tdQty = document.createElement("td");
+        tdQty.textContent = item.quantity;
+        tr.appendChild(tdQty);
+
+        const tdUnit = document.createElement("td");
+        tdUnit.textContent = item.unitCost;
+        tr.appendChild(tdUnit);
+
+        const tdTotal = document.createElement("td");
+        tdTotal.textContent = item.totalCost;
+        tr.appendChild(tdTotal);
+
+        sum += Number(item.totalCost);
+        tbody.appendChild(tr);
+      });
+      document.getElementById("stock-total").textContent = sum;
+      updateOverallTotal();
+    }
+
+    function populateConsumableTable(items) {
+      const tbody = document.querySelector("#consumable-table tbody");
+      tbody.innerHTML = "";
+      let totalQty = 0;
+      items.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = item.name;
+        tr.appendChild(tdName);
+
+        const tdQty = document.createElement("td");
+        tdQty.textContent = item.quantity;
+        tr.appendChild(tdQty);
+
+        totalQty += Number(item.quantity);
+        tbody.appendChild(tr);
+      });
+
+      // optional: show total quantity in footer
+      document.getElementById("consumable-total").textContent = totalQty;
+    }
+
+    function updateOverallTotal() {
+      const stockTotal = Number(document.getElementById("stock-total").textContent) || 0;
+      document.getElementById("overall-total").textContent = stockTotal;
+    }
+  </script>
+</body>
+</html>
