@@ -4,62 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>貸出システム / Lending System</title>
-  <link rel="stylesheet" href="styles.css?v=9">
+  <!-- 共通スタイルシート / Shared CSS -->
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <main>
-    <!-- =============================== -->
     <!-- メインタイトル / Main Title -->
-    <!-- =============================== -->
     <h2>📦 貸出システム / Lending System</h2>
 
-    <!-- =========================================== -->
     <!-- サブタイトル（倉庫名）/ Subheader (Storage) -->
-    <!-- =========================================== -->
     <h3>STORAGE1-A（ストック管理エリア）</h3>
 
-    <!-- =============================================== -->
     <!-- 操作選択メッセージ / Instruction for Action -->
-    <!-- =============================================== -->
-    <p>操作を選択してください。<br>Select an action below:</p>
+    <p>操作を選択してください。</p>
 
-    <!-- =============================================== -->
     <!-- 操作ボタン / Action Buttons -->
-    <!-- =============================================== -->
-    <button onclick="goTo('borrow')">貸出 / Borrow</button>
-    <button onclick="goTo('return')">返却 / Return</button>
-    <button onclick="goTo('adjust')">調整 / Adjust</button>
-    <!-- View button now points directly to storage1a_view.html -->
-    <button onclick="window.location.href='storage1a_view.html'">在庫を見る / View Inventory</button>
+    <button onclick="goTo('borrow')">貸出</button>
+    <button onclick="goTo('return')">返却</button>
+    <button onclick="goTo('adjust')">調整</button>
+    <!-- 在庫を見る / View Inventory -->
+    <button onclick="window.location.href='storage1a_view.html'">在庫を見る</button>
 
-    <!-- =============================== -->
     <!-- ロゴ / Company Logo -->
-    <!-- =============================== -->
     <div style="margin-top:40px;">
-      <img src="CA_Logo.jpg?v=9" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
+      <img src="CA_Logo.jpg?v=8" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
     </div>
   </main>
 
-  <!-- =============================== -->
   <!-- フッター / Footer -->
-  <!-- =============================== -->
   <footer>
     <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
   </footer>
 
-  <!-- =============================== -->
   <!-- スクリプト / Scripts -->
-  <!-- =============================== -->
   <script>
-    // 現在の年を自動的に表示 / Automatically display the current year
+    // 年を自動表示 / Automatically display current year
     document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
 
-  <script>
     /**
      * goTo(action)
-     * 指定された操作ページに移動する関数
-     * Function to navigate to the selected action page
+     * 各操作ページに移動 / Navigate to the corresponding action page
      */
     function goTo(action) {
       window.location.href = `${action}.html`;
