@@ -3,128 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STORAGE1-A 在庫 / Inventory</title>
-  <link rel="stylesheet" href="styles.css?v=9">
+  <title>STORAGE1-A 在庫一覧</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <style>
+    /* Force parentheses portion to second line */
+    h2 span {
+      display: block;
+      font-weight: normal;
+    }
+
+    /* Collapsible headers */
+    .collapsible {
+      background-color: #2a5298;
+      color: white;
+      cursor: pointer;
+      padding: 12px 18px;
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto 0 auto;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .collapsible:after {
+      content: '+';
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    .collapsible.active:after {
+      transform: rotate(45deg);
+    }
+
+    .content {
+      display: none;
+      overflow: hidden;
+      padding: 10px 0;
+    }
+
+    .item-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px auto;
+      width: 90%;
+      max-width: 600px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: minmax(30px, auto);
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .item-card div {
+      padding: 4px;
+    }
+
+    .total-cost {
+      font-weight: bold;
+      text-align: right;
+      margin: 10px auto;
+      max-width: 600px;
+    }
+  </style>
 </head>
 <body>
   <main>
-    <!-- =============================== -->
-    <!-- メインタイトル / Main Title -->
-    <!-- =============================== -->
-    <h2>📦 貸出システム / Lending System</h2>
+    <h2>STORAGE1-A<br><span>（ストック管理エリア）</span></h2>
 
-    <!-- ======================================= -->
-    <!-- サブタイトル（倉庫名）/ Subheader (Storage) -->
-    <!-- ======================================= -->
-    <h3>STORAGE1-A<br>（ストック管理エリア）</h3>
+    <div class="total-cost" id="stockTotal">総在庫コスト: ¥0</div>
 
-    <!-- =============================== -->
-    <!-- 総在庫コスト / Total Inventory Cost -->
-    <!-- =============================== -->
-    <p id="totalInventoryCost">総在庫コスト: ¥0</p>
+    <!-- ストック -->
+    <button type="button" class="collapsible">ストック</button>
+    <div class="content" id="stockContent"></div>
 
-    <!-- =============================== -->
-    <!-- ストック品 / Stock Items -->
-    <!-- =============================== -->
-    <div class="collapsible-section">
-      <button class="collapsible">ストック品</button>
-      <div class="content">
-        <!-- 各アイテムはここに追加されます / Items will be dynamically added -->
-        <div id="stock-items"></div>
-      </div>
-    </div>
-
-    <!-- =============================== -->
-    <!-- 消耗品 / Consumables -->
-    <!-- =============================== -->
-    <div class="collapsible-section">
-      <button class="collapsible">消耗品</button>
-      <div class="content">
-        <div id="consumables-items"></div>
-      </div>
-    </div>
+    <!-- 消耗品 -->
+    <button type="button" class="collapsible">消耗品</button>
+    <div class="content" id="consumableContent"></div>
 
   </main>
 
-  <footer>
-    <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
-  </footer>
-
   <script>
-    // 年を自動表示 / Automatically display current year
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=STORAGE1-A';
 
-    // Collapsible sections
-    const collapsibles = document.querySelectorAll(".collapsible");
-    collapsibles.forEach(btn => {
-      btn.addEventListener("click", function() {
-        this.classList.toggle("active");
-        const content = this.nextElementSibling;
-        if(content.style.maxHeight){
-          content.style.maxHeight = null;
-        } else {
-          content.style.maxHeight = content.scrollHeight + "px";
-        }
-      });
-    });
-
-    // ===============================
-    // データ取得 / Fetch inventory data
-    // ===============================
-    async function fetchInventory() {
-      const apiUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?action=view&storage=STORAGE1-A';
-
+    async function loadInventory() {
       try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
+        const res = await fetch(apiUrl);
+        const data = await res.json();
 
+        if (!Array.isArray(data)) {
+          console.error('Invalid data:', data);
+          return;
+        }
+
+        let stockHtml = '';
+        let consumableHtml = '';
         let totalCost = 0;
-        const stockContainer = document.getElementById("stock-items");
-        const consumablesContainer = document.getElementById("consumables-items");
-
-        stockContainer.innerHTML = "";
-        consumablesContainer.innerHTML = "";
 
         data.forEach(item => {
-          if(item.type === "ストック"){
-            const unitCost = parseFloat(item.unitCost) || 0;
-            const quantity = parseFloat(item.quantity) || 0;
-            const itemTotal = unitCost * quantity;
+          if (item.type === 'ストック') {
+            const unitPrice = parseFloat(item.unitPrice) || 0;
+            const qty = parseInt(item.unitQty) || 0;
+            const itemTotal = unitPrice * qty;
             totalCost += itemTotal;
 
-            const card = document.createElement("div");
-            card.className = "item-card";
-            card.innerHTML = `
-              <div class="item-left">${item.name}</div>
-              <div class="item-right">
-                <p>数量: ${quantity}</p>
-                <p>単価: ¥${unitCost.toLocaleString()}</p>
-                <p>合計: ¥${itemTotal.toLocaleString()}</p>
+            stockHtml += `
+              <div class="item-card">
+                <div>品名: ${item.name}</div>
+                <div>数量: ${qty}</div>
+                <div>単価: ¥${unitPrice.toLocaleString()}</div>
+                <div>合計: ¥${itemTotal.toLocaleString()}</div>
               </div>
             `;
-            stockContainer.appendChild(card);
-          } else if(item.type === "消耗品"){
-            const card = document.createElement("div");
-            card.className = "item-card";
-            card.innerHTML = `
-              <div class="item-left">${item.name}</div>
-              <div class="item-right">
-                <p>数量: ${item.quantity}</p>
+          } else if (item.type === '消耗品') {
+            const qty = parseInt(item.unitQty) || 0;
+            consumableHtml += `
+              <div class="item-card">
+                <div>品名: ${item.name}</div>
+                <div>数量: ${qty}</div>
               </div>
             `;
-            consumablesContainer.appendChild(card);
           }
         });
 
-        document.getElementById("totalInventoryCost").textContent = `総在庫コスト: ¥${totalCost.toLocaleString()}`;
+        document.getElementById('stockContent').innerHTML = stockHtml;
+        document.getElementById('consumableContent').innerHTML = consumableHtml;
+        document.getElementById('stockTotal').textContent = `総在庫コスト: ¥${totalCost.toLocaleString()}`;
 
       } catch(err) {
-        console.error("在庫データの取得に失敗しました / Failed to fetch inventory data", err);
+        console.error('在庫データの取得に失敗しました', err);
       }
     }
 
-    fetchInventory();
+    loadInventory();
+
+    // Collapsible logic
+    const collapsibles = document.querySelectorAll('.collapsible');
+    collapsibles.forEach(button => {
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+        const content = button.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    });
   </script>
 </body>
 </html>
