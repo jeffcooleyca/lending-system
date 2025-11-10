@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>貸出システム / Lending System</title>
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <main>
@@ -31,16 +31,11 @@
     <button onclick="goTo('adjust')">調整 / Adjust</button>
     <button onclick="viewInventory()">在庫を見る / View Inventory</button>
 
-    <!-- =============================================== -->
-    <!-- 在庫表示用 / Inventory Display -->
-    <!-- =============================================== -->
-    <div id="inventoryDisplay" style="margin-top:20px;"></div>
-
     <!-- =============================== -->
     <!-- ロゴ / Company Logo -->
     <!-- =============================== -->
     <div style="margin-top:40px;">
-      <img src="CA_Logo.jpg?v=8" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
+      <img src="CA_Logo.jpg?v=9" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
     </div>
   </main>
 
@@ -55,55 +50,57 @@
   <!-- スクリプト / Scripts -->
   <!-- =============================== -->
   <script>
-    // 現在の年を自動的に表示 / Automatically display the current year
+    // 年を自動更新 / Auto-update the year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // 操作ページに移動 / Navigate to action page
+    /**
+     * goTo(action)
+     * 指定された操作ページに移動する関数
+     * Function to navigate to the selected action page
+     */
     function goTo(action) {
       window.location.href = `storage.html?action=${action}`;
     }
 
-    // 在庫を取得して表示 / Fetch inventory from API and display
+    /**
+     * viewInventory()
+     * STORAGE1-A の在庫を Web App から取得して新しいページに表示
+     * Fetch inventory from the Web App and open in a new page
+     */
     function viewInventory() {
-      const apiUrl = 'https://script.google.com/macros/s/AKfycbwjlcYtHr30JmDdQTG6SnYyl1z0rEbGrCwYtT1MtEmBfQyT3GhOHAa5ZNrbA4RGBhCZ/exec?action=view&storage=storage1a';
+      const webAppUrl = "https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec";
+      
+      // STORAGE1-A 固定 / STORAGE1-A fixed
+      const params = new URLSearchParams({ storage: "STORAGE1-A", action: "view" });
 
-      fetch(apiUrl)
-        .then(res => res.json())
+      fetch(`${webAppUrl}?${params.toString()}`)
+        .then(response => response.json())
         .then(data => {
-          const container = document.getElementById('inventoryDisplay');
-          container.innerHTML = ''; // 以前のテーブルをクリア / Clear previous table
-
-          if (data.status === 'success') {
-            const table = document.createElement('table');
-            table.classList.add('inventory-table');
-
-            // ヘッダー行 / Header row
-            const headerRow = document.createElement('tr');
-            data.data[0].forEach(header => {
-              const th = document.createElement('th');
-              th.textContent = header;
-              headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
-
-            // データ行 / Data rows
-            for (let i = 1; i < data.data.length; i++) {
-              const row = document.createElement('tr');
-              data.data[i].forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = cell;
-                row.appendChild(td);
-              });
-              table.appendChild(row);
-            }
-
-            container.appendChild(table);
-          } else {
-            container.textContent = 'エラー: ' + data.message;
+          // JSON を一時的に新しいページに表示
+          // Create a new page to show the table
+          const newWindow = window.open();
+          let html = `<h2>STORAGE1-A 在庫 / Inventory</h2>`;
+          html += `<table border="1" style="border-collapse:collapse;width:100%;text-align:center;">`;
+          html += "<tr>";
+          // ヘッダー / Table header
+          for (let key of Object.keys(data[0] || {})) {
+            html += `<th>${key}</th>`;
           }
+          html += "</tr>";
+          // データ行 / Table rows
+          data.forEach(row => {
+            html += "<tr>";
+            for (let key in row) {
+              html += `<td>${row[key]}</td>`;
+            }
+            html += "</tr>";
+          });
+          html += "</table>";
+          newWindow.document.write(html);
+          newWindow.document.close();
         })
-        .catch(err => {
-          document.getElementById('inventoryDisplay').textContent = '通信エラー: ' + err.message;
+        .catch(error => {
+          alert("在庫取得中にエラーが発生しました / Error fetching inventory:\n" + error);
         });
     }
   </script>
