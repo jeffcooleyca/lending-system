@@ -6,12 +6,6 @@
   <title>STORAGE1-A 在庫一覧</title>
   <link rel="stylesheet" href="styles.css?v=8">
   <style>
-    /* Force parentheses portion to second line */
-    h2 span {
-      display: block;
-      font-weight: normal;
-    }
-
     /* Collapsible headers */
     .collapsible {
       background-color: #2a5298;
@@ -36,12 +30,27 @@
       transform: rotate(45deg);
     }
 
+    /* Total inventory cost header */
+    .total-cost {
+      background-color: #2a5298; /* same as collapsibles */
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 12px 18px;
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto 0 auto;
+      border-radius: 8px;
+      font-size: 1.2rem;
+    }
+
     .content {
       display: none;
       overflow: hidden;
       padding: 10px 0;
     }
 
+    /* Stock item cards: 2x4 grid */
     .item-card {
       background-color: white;
       border-radius: 8px;
@@ -51,26 +60,37 @@
       max-width: 600px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: minmax(30px, auto);
+      grid-template-rows: repeat(4, auto);
       gap: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .item-card div {
-      padding: 4px;
+    /* Consumable cards: 2x1 grid */
+    .consumable-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px auto;
+      width: 90%;
+      max-width: 600px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: 1fr;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .total-cost {
-      font-weight: bold;
-      text-align: right;
-      margin: 10px auto;
-      max-width: 600px;
+    .item-card div, .consumable-card div {
+      padding: 4px;
     }
   </style>
 </head>
 <body>
   <main>
-    <h2>STORAGE1-A<br><span>（ストック管理エリア）</span></h2>
+    <h2>
+      STORAGE1-A
+      <span style="display:block;">（ストック管理エリア）</span>
+    </h2>
 
     <div class="total-cost" id="stockTotal">総在庫コスト: ¥0</div>
 
@@ -81,7 +101,6 @@
     <!-- 消耗品 -->
     <button type="button" class="collapsible">消耗品</button>
     <div class="content" id="consumableContent"></div>
-
   </main>
 
   <script>
@@ -119,7 +138,7 @@
           } else if (item.type === '消耗品') {
             const qty = parseInt(item.unitQty) || 0;
             consumableHtml += `
-              <div class="item-card">
+              <div class="consumable-card">
                 <div>品名: ${item.name}</div>
                 <div>数量: ${qty}</div>
               </div>
@@ -132,7 +151,7 @@
         document.getElementById('stockTotal').textContent = `総在庫コスト: ¥${totalCost.toLocaleString()}`;
 
       } catch(err) {
-        console.error('在庫データの取得に失敗しました', err);
+        console.error('Failed to fetch inventory data', err);
       }
     }
 
@@ -144,11 +163,7 @@
       button.addEventListener('click', () => {
         button.classList.toggle('active');
         const content = button.nextElementSibling;
-        if (content.style.display === "block") {
-          content.style.display = "none";
-        } else {
-          content.style.display = "block";
-        }
+        content.style.display = content.style.display === "block" ? "none" : "block";
       });
     });
   </script>
