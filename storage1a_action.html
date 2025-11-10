@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>貸出システム / Lending System</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+</head>
+<body>
+  <main>
+    <h2>📦 貸出システム / Lending System</h2>
+    <p>操作を選択してください。<br>Select an action below:</p>
+
+    <button onclick="goTo('borrow')">貸出 / Borrow</button>
+    <button onclick="goTo('return')">返却 / Return</button>
+    <button onclick="goTo('adjust')">調整 / Adjust</button>
+    <button onclick="goTo('view')">在庫を見る / View Inventory</button>
+
+    <!-- ロゴ / Company Logo -->
+    <div style="margin-top:40px;">
+      <img src="CA_Logo.jpg?v=8" alt="Company Logo" style="max-width:200px; width:50%; height:auto;">
+    </div>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
+  </footer>
+
+  <script>
+    // 年を自動更新 / Auto-update the year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  <script>
+    function goTo(action) {
+      window.location.href = `storage.html?action=${action}`;
+    }
+  </script>
+</body>
+</html>
