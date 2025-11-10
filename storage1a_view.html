@@ -3,100 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STORAGE1-A 在庫表示 / Inventory View</title>
-  <link rel="stylesheet" href="styles.css?v=9">
-</head>
-<body>
-  <main>
-    <h2>STORAGE1-A 在庫表示</h2>
-
-    <!-- ストック品と消耗品のテーブルを分ける -->
-    <div id="stock-section">
-      <h3>ストック品</h3>
-      <table id="stock-table">
-        <thead>
-          <tr>
-            <th>品名</th>
-            <th>数量</th>
-            <th>単価</th>
-            <th>合計</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3">総在庫コスト</td>
-            <td id="stock-total">0</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-
-    <div id="consumables-section">
-      <h3>消耗品</h3>
-      <table id="consumables-table">
-        <thead>
-          <tr>
-            <th>品名</th>
-            <th>数量</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-  </main>
-
-  <footer>
-    <p>© <span id="year"></span> クリエイティブエージェント（株）</p>
-  </footer>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec';
-
-    async function fetchInventory() {
-      try {
-        const res = await fetch(apiUrl);
-        const json = await res.json();
-        if(json.status !== 'success') throw new Error(json.message);
-
-        const inventory = json.data;
-        let stockTotal = 0;
-
-        const stockTbody = document.querySelector('#stock-table tbody');
-        const consumablesTbody = document.querySelector('#consumables-table tbody');
-
-        stockTbody.innerHTML = '';
-        consumablesTbody.innerHTML = '';
-
-        inventory.forEach(item => {
-          if(item.type === 'ストック') {
-            stockTbody.innerHTML += `<tr>
-              <td>${item.itemName}</td>
-              <td>${item.quantity}</td>
-              <td>${item.unitPrice}</td>
-              <td>${item.totalCost}</td>
-            </tr>`;
-            stockTotal += Number(item.totalCost) || 0;
-          } else if(item.type === '消耗品') {
-            consumablesTbody.innerHTML += `<tr>
-              <td>${item.itemName}</td>
-              <td>${item.quantity}</td>
-            </tr>`;
-          }
-        });
-
-        document.getElementById('stock-total').textContent = stockTotal;
-
-      } catch(err) {
-        alert('在庫データの取得に失敗しました: ' + err.message);
-      }
+  <title>STORAGE1-A 在庫一覧 / Inventory Overview</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <style>
+    body {
+      background: linear-gradient(135deg, #dce9ff 10%, #ffffff 80%);
+      color: #333;
+      font-family: "Segoe UI", sans-serif;
     }
 
-    // ページ読み込み時にデータ取得
-    window.onload = fetchInventory;
+    h2 {
+      margin-top: 20px;
+      color: #1e3c72;
+    }
+
+    details {
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 10px 15px;
+      width: 95%;
+      max-width: 900px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    summary {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1e3c72;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    summary::after {
+      content: "＋";
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    details[open] summary::after {
+      content: "－";
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 15px 0 10px 0;
+    }
+
+    .item-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: left;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .item-name {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #1e3c72;
+    }
+
+    .item-info {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    /* total cost display */
+    .total-cost {
+      margin: 15px auto;
+      font-weight: bold;
+      font-size: 18px;
+      color: #1e3c72;
+      width: 95%;
+      max-width: 900px;
+      text-align: right;
+      background-color: rgba(255,255,255,0.5);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    /* consumables: simplified 2-column layout */
+    .consumable-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #1a3f6f, #274b87);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #0f2b55, #1f3b75);
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h2>STORAGE1-A 在庫一覧 / Inventory Overview</h2>
+
+    <!-- Total cost always visible -->
+    <div id="totalInventoryCost" class="total-cost">合計在庫コスト: ¥0</div>
+
+    <!-- Collapsible STOCK section -->
+    <details>
+      <summary>📦 ストック品 (Stock Items)</summary>
+      <div id="stockGrid" class="item-grid"></div>
+    </details>
+
+    <!-- Collapsible CONSUMABLES section -->
+    <details>
+      <summary>🧰 消耗品 (Consumables)</summary>
+      <div id="consumableGrid" class="item-grid"></div>
+    </details>
+
+    <button onclick="window.location.href='storage1a_action.html'">← 戻る / Back</button>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const apiUrl =
+        "https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?action=view&storage=STORAGE1-A";
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            renderInventory(data.data);
+          } else {
+            alert("データ取得エラー: " + data.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Failed to fetch inventory data.");
+        });
+    });
+
+    function renderInventory(items) {
+      const stockGrid = document.getElementById("stockGrid");
+      const consumableGrid = document.getElementById("consumableGrid");
+      const totalCostElem = document.getElementById("totalInventoryCost");
+      let totalInventoryCost = 0;
+
+      items.forEach(row => {
+        const [ , itemName, type, unitCost, quantity ] = row;
+        if (!itemName || !quantity) return;
+
+        const cost = parseFloat(unitCost) || 0;
+        const qty = parseFloat(quantity) || 0;
+        const total = cost * qty;
+        const formattedCost = cost ? `¥${cost.toLocaleString()}` : "-";
+        const formattedTotal = total ? `¥${total.toLocaleString()}` : "-";
+
+        if (type === "ストック") {
+          const card = document.createElement("div");
+          card.classList.add("item-card");
+          card.innerHTML = `
+            <div class="item-name">${itemName}</div>
+            <div class="item-info"><strong>数量:</strong> ${qty}</div>
+            <div class="item-info"><strong>単価:</strong> ${formattedCost}</div>
+            <div class="item-info"><strong>合計:</strong> ${formattedTotal}</div>
+          `;
+          stockGrid.appendChild(card);
+          totalInventoryCost += total;
+        } 
+        else if (type === "消耗品") {
+          const card = document.createElement("div");
+          card.classList.add("consumable-card");
+          card.innerHTML = `
+            <div class="item-name">${itemName}</div>
+            <div class="item-info"><strong>数量:</strong> ${qty}</div>
+          `;
+          consumableGrid.appendChild(card);
+        }
+      });
+
+      totalCostElem.textContent =
+        "合計在庫コスト: ¥" + totalInventoryCost.toLocaleString();
+    }
   </script>
 </body>
 </html>
