@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STORAGE4 在庫一覧</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <style>
+    /* Collapsible headers */
+    .collapsible {
+      background-color: #2a5298;
+      color: white;
+      cursor: pointer;
+      padding: 12px 18px;
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto 0 auto;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .collapsible:after {
+      content: '+';
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    .collapsible.active:after {
+      transform: rotate(45deg);
+    }
+
+    .content {
+      display: none;
+      overflow: hidden;
+      padding: 10px 0;
+    }
+
+    .item-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px auto;
+      width: 90%;
+      max-width: 600px;
+      display: grid;
+      grid-template-columns: 25% 75%;
+      grid-template-rows: repeat(5, auto);
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .item-card div {
+      padding: 4px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>STORAGE4 在庫一覧</h2>
+
+    <!-- エリア1 -->
+    <button type="button" class="collapsible">エリア１－脚立・ホース</button>
+    <div class="content" id="area1Content"></div>
+
+    <!-- エリア2 -->
+    <button type="button" class="collapsible">エリア２ - コーン・バー</button>
+    <div class="content" id="area2Content"></div>
+  </main>
+
+  <script>
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=STORAGE4';
+
+    async function loadInventory() {
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        // Filter by location (場所)
+        const area1Items = data.filter(item => item.場所 === "エリア１");
+        const area2Items = data.filter(item => item.場所 === "エリア２");
+
+        document.getElementById('area1Content').innerHTML = renderItems(area1Items);
+        document.getElementById('area2Content').innerHTML = renderItems(area2Items);
+
+      } catch (err) {
+        console.error('Failed to fetch inventory data', err);
+      }
+    }
+
+    function renderItems(items) {
+      return items.map(item => `
+        <div class="item-card" style="${item.数 < item.基本数 ? 'border:2px solid red;' : ''}">
+          <div>管理ID:</div><div>${item.管理ID}</div>
+          <div>工具名:</div><div>${item.工具名前}</div>
+          <div>番号:</div><div>${item.番号}</div>
+          <div>数量:</div><div>${item.数}</div>
+          <div>基本数:</div><div>${item.基本数}</div>
+        </div>
+      `).join('');
+    }
+
+    // Collapsible logic
+    const collapsibles = document.querySelectorAll('.collapsible');
+    collapsibles.forEach(button => {
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+        const content = button.nextElementSibling;
+        content.style.display = content.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    // Load inventory
+    loadInventory();
+  </script>
+</body>
+</html>
