@@ -31,11 +31,17 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
-  <script>
-    function goTo(action) {
-      window.location.href = `storage.html?action=${action}`;
+<script>
+  function goTo(target) {
+    // Direct HTML navigation
+    if (target.endsWith('.html')) {
+      window.location.href = target;
+    } else {
+      // Action-based routing (borrow / return / adjust)
+      window.location.href = `storage.html?action=${target}`;
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
-
