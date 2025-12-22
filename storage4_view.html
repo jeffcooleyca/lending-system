@@ -36,20 +36,22 @@
       padding: 10px 0;
     }
 
-    /* ===== Table ===== */
+    /* ===== Table wrapper ===== */
     .table-wrapper {
       width: 90%;
       max-width: 600px;
       margin: 10px auto 30px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
+    /* ===== Table ===== */
     table {
       width: 100%;
       border-collapse: collapse;
       background: white;
       font-size: 14px;
-      table-layout: fixed; /* ← important */
+      table-layout: fixed; /* REQUIRED */
     }
 
     th, td {
@@ -63,18 +65,25 @@
       color: white;
     }
 
-    /* ===== Column width control ===== */
+    /* ===== Column behavior ===== */
+
+    /* 工具名 — flexible, wraps */
     th:nth-child(1),
     td:nth-child(1) {
-      width: 44%;
-      white-space: normal; /* allow wrap for long names */
+      width: auto;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
+    /* 数量 / 基本数 — HARD LOCK */
     th:nth-child(2),
     td:nth-child(2),
     th:nth-child(3),
     td:nth-child(3) {
-      width: 28%;
+      width: 64px;
+      min-width: 64px;
+      max-width: 64px;
       text-align: center;
       white-space: nowrap;
     }
@@ -91,6 +100,16 @@
 
       th, td {
         padding: 4px 6px;
+      }
+
+      /* tighter numeric columns for portrait */
+      th:nth-child(2),
+      td:nth-child(2),
+      th:nth-child(3),
+      td:nth-child(3) {
+        width: 56px;
+        min-width: 56px;
+        max-width: 56px;
       }
     }
   </style>
