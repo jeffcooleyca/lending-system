@@ -31,20 +31,18 @@
       padding: 10px 0;
     }
 
-    /* ===== Table wrapper ===== */
+    /* ===== Table (desktop) ===== */
     .table-wrapper {
       width: 90%;
       max-width: 600px;
       margin: 10px auto 30px;
     }
 
-    /* ===== Desktop / Tablet table ===== */
     table {
       width: 100%;
       border-collapse: collapse;
       background: white;
       font-size: 14px;
-      table-layout: fixed;
     }
 
     th, td {
@@ -58,28 +56,11 @@
       color: white;
     }
 
-    /* 工具名 */
-    th:nth-child(1),
-    td:nth-child(1) {
-      white-space: normal;
-      word-break: break-word;
-    }
-
-    /* 数量 / 基本数 */
-    th:nth-child(2),
-    td:nth-child(2),
-    th:nth-child(3),
-    td:nth-child(3) {
-      width: 72px;
-      text-align: center;
-      white-space: nowrap;
-    }
-
     tr.alert {
       background-color: #ffe5e5;
     }
 
-    /* ===== Phone layout (stacked rows) ===== */
+    /* ===== Mobile stacked rows ===== */
     @media screen and (max-width: 480px) {
 
       table,
@@ -87,7 +68,6 @@
       tbody,
       tr {
         display: block;
-        width: 100%;
       }
 
       thead {
@@ -97,8 +77,8 @@
       tr {
         border: 1px solid #ccc;
         border-radius: 6px;
-        padding: 8px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
+        padding: 6px;
         background: white;
       }
 
@@ -107,29 +87,21 @@
       }
 
       td {
-        display: block;
+        display: flex;
+        justify-content: space-between;
         border: none;
         padding: 4px 0;
         font-size: 13px;
       }
 
-      /* 工具名 */
-      td:nth-child(1) {
+      td::before {
         font-weight: bold;
-        margin-bottom: 4px;
+        color: #333;
       }
 
-      /* 数量 */
-      td:nth-child(2)::before {
-        content: "数量: ";
-        font-weight: bold;
-      }
-
-      /* 基本数 */
-      td:nth-child(3)::before {
-        content: "基本数: ";
-        font-weight: bold;
-      }
+      td:nth-child(1)::before { content: "工具名"; }
+      td:nth-child(2)::before { content: "数量"; }
+      td:nth-child(3)::before { content: "基本数"; }
     }
   </style>
 </head>
