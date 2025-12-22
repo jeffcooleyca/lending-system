@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=16"> <!-- Your shared stylesheet stays intact -->
+  <link rel="stylesheet" href="styles.css?v=17"> <!-- Your shared stylesheet remains untouched -->
   <style>
     body {
       font-family: sans-serif;
@@ -41,7 +41,7 @@
     .collapsible.active::after { content: '−'; }
     .content { display: none; padding: 10px 0; }
 
-    /* Unique wrapper and table classes — only affect this page */
+    /* Unique classes for this page only */
     .inventory-table-wrapper {
       width: 100%;
       max-width: 700px;
@@ -62,14 +62,15 @@
     .inventory-table td {
       border: 1px solid #ccc !important;
       padding: 12px 10px !important;
-      text-align: center;
+      text-align: center !important;
       white-space: nowrap !important;
       display: table-cell !important;
+      vertical-align: middle !important;
     }
 
     .inventory-table th:first-child,
     .inventory-table td:first-child {
-      text-align: left;
+      text-align: left !important;
     }
 
     .inventory-table thead th {
@@ -84,28 +85,25 @@
       background-color: #ffe5e5 !important;
     }
 
-    /* Force normal table layout — overrides any old mobile rules in styles.css */
-    .inventory-table,
-    .inventory-table thead,
-    .inventory-table tbody,
-    .inventory-table tr,
+    /* Force correct table structure – overrides any conflicting rules from styles.css */
+    .inventory-table { display: table !important; }
+    .inventory-table thead { display: table-header-group !important; }
+    .inventory-table tbody { display: table-row-group !important; }
+    .inventory-table tr { display: table-row !important; }
     .inventory-table th,
-    .inventory-table td {
-      display: table !important;
-      display: table-header-group !important;
-      display: table-row-group !important;
-      display: table-row !important;
-      display: table-cell !important;
-    }
+    .inventory-table td { display: table-cell !important; }
 
-    /* Desktop & landscape: normal table, no scroll */
+    /* Desktop / Landscape (screen ≥ 481px): normal table, fits screen, no scroll */
     @media screen and (min-width: 481px) {
       .inventory-table-wrapper {
-        overflow-x: hidden; /* No horizontal scroll on larger screens */
+        overflow: hidden; /* Ensure no scroll */
+      }
+      .inventory-table {
+        width: 100%;
       }
     }
 
-    /* Mobile portrait only: add horizontal scroll when needed */
+    /* Mobile Portrait only (≤ 480px): horizontal scroll, columns stay on one row */
     @media screen and (max-width: 480px) {
       .collapsible {
         width: 95%;
@@ -113,13 +111,14 @@
       }
 
       .inventory-table-wrapper {
-        overflow-x: auto;
+        overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
         width: 100%;
       }
 
       .inventory-table {
-        min-width: 500px; /* Forces columns to stay side-by-side → swipe to see all */
+        width: auto;            /* Let it grow naturally */
+        min-width: 480px;       /* Force 3 columns side-by-side → swipe needed */
         font-size: 14.5px;
       }
 
