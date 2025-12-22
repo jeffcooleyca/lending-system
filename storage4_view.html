@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
   <link rel="stylesheet" href="styles.css?v=8">
+
   <style>
     /* Collapsible headers */
     .collapsible {
@@ -21,97 +22,133 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .collapsible:after {
       content: '+';
       font-size: 1.2rem;
-      transition: transform 0.3s;
     }
+
     .collapsible.active:after {
-      transform: rotate(45deg);
+      content: '−';
     }
 
     .content {
       display: none;
-      overflow: hidden;
       padding: 10px 0;
     }
 
-    .item-card {
-      background-color: white;
-      border-radius: 8px;
-      padding: 10px;
-      margin: 8px auto;
+    table {
       width: 90%;
       max-width: 600px;
-      display: grid;
-      grid-template-columns: 25% 75%;
-      grid-template-rows: repeat(5, auto);
-      gap: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 10px auto 30px;
+      border-collapse: collapse;
+      background: white;
     }
 
-    .item-card div {
-      padding: 4px;
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background: #2a5298;
+      color: white;
+    }
+
+    tr.alert {
+      background-color: #ffe5e5; /* 点検用アラート */
     }
   </style>
 </head>
+
 <body>
-  <main>
-    <h2>STORAGE4 在庫一覧</h2>
+<main>
+  <h2>STORAGE4 在庫一覧</h2>
 
-    <!-- エリア1 -->
-    <button type="button" class="collapsible">エリア１－脚立・ホース</button>
-    <div class="content" id="area1Content"></div>
+  <!-- エリア1 -->
+  <button type="button" class="collapsible">エリア１－脚立・ホース</button>
+  <div class="content">
+    <table>
+      <thead>
+        <tr>
+          <th>管理ID</th>
+          <th>工具名</th>
+          <th>番号</th>
+          <th>数量</th>
+          <th>基本数</th>
+        </tr>
+      </thead>
+      <tbody id="area1Body"></tbody>
+    </table>
+  </div>
 
-    <!-- エリア2 -->
-    <button type="button" class="collapsible">エリア２ - コーン・バー</button>
-    <div class="content" id="area2Content"></div>
-  </main>
+  <!-- エリア2 -->
+  <button type="button" class="collapsible">エリア２－コーン・バー</button>
+  <div class="content">
+    <table>
+      <thead>
+        <tr>
+          <th>管理ID</th>
+          <th>工具名</th>
+          <th>番号</th>
+          <th>数量</th>
+          <th>基本数</th>
+        </tr>
+      </thead>
+      <tbody id="area2Body"></tbody>
+    </table>
+  </div>
+</main>
 
-  <script>
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=STORAGE4';
+<script>
+const apiUrl =
+  'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=STORAGE4';
 
-    async function loadInventory() {
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
+async function loadInventory() {
+  const res = await fetch(apiUrl);
+  const data = await res.json();
 
-        // Filter by location (場所)
-        const area1Items = data.filter(item => item.場所 === "エリア１");
-        const area2Items = data.filter(item => item.場所 === "エリア２");
+  const area1Body = document.getElementById('area1Body');
+  const area2Body = document.getElementById('area2Body');
 
-        document.getElementById('area1Content').innerHTML = renderItems(area1Items);
-        document.getElementById('area2Content').innerHTML = renderItems(area2Items);
+  area1Body.innerHTML = '';
+  area2Body.innerHTML = '';
 
-      } catch (err) {
-        console.error('Failed to fetch inventory data', err);
-      }
+  data.forEach(item => {
+    const row = document.createElement('tr');
+
+    if (item.qty < item.baseQty) {
+      row.classList.add('alert');
     }
 
-    function renderItems(items) {
-      return items.map(item => `
-        <div class="item-card" style="${item.数 < item.基本数 ? 'border:2px solid red;' : ''}">
-          <div>管理ID:</div><div>${item.管理ID}</div>
-          <div>工具名:</div><div>${item.工具名前}</div>
-          <div>番号:</div><div>${item.番号}</div>
-          <div>数量:</div><div>${item.数}</div>
-          <div>基本数:</div><div>${item.基本数}</div>
-        </div>
-      `).join('');
+    row.innerHTML = `
+      <td>${item.id || ''}</td>
+      <td>${item.name}</td>
+      <td>${item.number || ''}</td>
+      <td>${item.qty}</td>
+      <td>${item.baseQty}</td>
+    `;
+
+    if (item.location === 'エリア１') {
+      area1Body.appendChild(row);
+    } else if (item.location === 'エリア２') {
+      area2Body.appendChild(row);
     }
+  });
+}
 
-    // Collapsible logic
-    const collapsibles = document.querySelectorAll('.collapsible');
-    collapsibles.forEach(button => {
-      button.addEventListener('click', () => {
-        button.classList.toggle('active');
-        const content = button.nextElementSibling;
-        content.style.display = content.style.display === "block" ? "none" : "block";
-      });
-    });
+// collapsible logic
+document.querySelectorAll('.collapsible').forEach(button => {
+  button.addEventListener('click', () => {
+    button.classList.toggle('active');
+    const content = button.nextElementSibling;
+    content.style.display =
+      content.style.display === 'block' ? 'none' : 'block';
+  });
+});
 
-    // Load inventory
-    loadInventory();
-  </script>
+loadInventory();
+</script>
 </body>
 </html>
