@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
   <style>
     body {
       font-family: sans-serif;
@@ -50,9 +50,9 @@
       padding: 10px 0;
     }
 
-    /* ===== Force normal table layout on ALL devices ===== */
+    /* ===== Scrollable table wrapper ===== */
     .table-wrapper {
-      width: 95%;
+      width: 100%;
       max-width: 700px;
       margin: 10px auto 30px;
       overflow-x: auto;
@@ -60,73 +60,66 @@
       background: white;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      scrollbar-width: thin; /* Firefox */
+    }
+    .table-wrapper::-webkit-scrollbar {
+      height: 8px;
+    }
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.3);
+      border-radius: 4px;
     }
 
     table {
       width: 100%;
-      min-width: 500px;
+      min-width: 560px;              /* Enough room for readable columns */
       border-collapse: collapse;
       background: white;
       font-size: 15px;
-      table-layout: fixed; /* Forces consistent column layout */
-    }
-
-    thead, tbody, tr, th, td {
-      display: table-row-group;   /* Explicitly force normal table behavior */
-    }
-
-    tr {
-      display: table-row;
     }
 
     th, td {
-      display: table-cell;
-      vertical-align: middle;
       border: 1px solid #ccc;
-      padding: 10px 12px;
-      text-align: left;
+      padding: 12px 16px;            /* More comfortable padding */
+      text-align: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    /* Specific column widths for better balance */
+    th:nth-child(1), td:nth-child(1) { width: 55%; max-width: 300px; } /* Tool name - widest */
+    th:nth-child(2), td:nth-child(2) { width: 22%; }
+    th:nth-child(3), td:nth-child(3) { width: 23%; }
 
     th {
       background: #2a5298;
       color: white;
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Extra visibility when scrolling */
     }
 
     tr.alert {
       background-color: #ffe5e5;
     }
 
-    /* ===== Mobile fixes (especially for Android Chrome) ===== */
+    /* Mobile portrait tweaks */
     @media screen and (max-width: 480px) {
       .collapsible {
         width: 95%;
         font-size: 1rem;
       }
 
-      .table-wrapper {
-        width: 100%;
-        border-radius: 6px;
-      }
-
       table {
-        font-size: 14px;
-        min-width: 480px;
+        font-size: 14.5px;
+        min-width: 540px;
       }
 
       th, td {
-        padding: 8px 10px;
+        padding: 10px 14px;
       }
-    }
-
-    /* Extra safety reset - override any possible external CSS */
-    table, thead, tbody, tr, th, td {
-      box-sizing: border-box;
     }
   </style>
 </head>
@@ -212,7 +205,6 @@
     }
   }
 
-  // Collapsible logic
   document.querySelectorAll('.collapsible').forEach(button => {
     button.addEventListener('click', () => {
       button.classList.toggle('active');
