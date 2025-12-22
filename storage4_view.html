@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
   <style>
     body {
       font-family: sans-serif;
@@ -60,19 +60,11 @@
       background: white;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      scrollbar-width: thin; /* Firefox */
-    }
-    .table-wrapper::-webkit-scrollbar {
-      height: 8px;
-    }
-    .table-wrapper::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,0.3);
-      border-radius: 4px;
     }
 
     table {
       width: 100%;
-      min-width: 560px;              /* Enough room for readable columns */
+      min-width: 520px;                  /* Balanced width for portrait */
       border-collapse: collapse;
       background: white;
       font-size: 15px;
@@ -80,25 +72,31 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 12px 16px;            /* More comfortable padding */
+      padding: 12px 10px;
       text-align: center;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    /* Specific column widths for better balance */
-    th:nth-child(1), td:nth-child(1) { width: 55%; max-width: 300px; } /* Tool name - widest */
-    th:nth-child(2), td:nth-child(2) { width: 22%; }
-    th:nth-child(3), td:nth-child(3) { width: 23%; }
+    /* Tool name column gets more space */
+    th:first-child, td:first-child {
+      text-align: left;
+      width: 60%;
+    }
 
-    th {
+    th:nth-child(2), td:nth-child(2) {
+      width: 20%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+      width: 20%;
+    }
+
+    thead th {
       background: #2a5298;
       color: white;
       position: sticky;
       top: 0;
       z-index: 10;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Extra visibility when scrolling */
     }
 
     tr.alert {
@@ -112,13 +110,18 @@
         font-size: 1rem;
       }
 
+      .table-wrapper {
+        width: 100%;
+        border-radius: 6px;
+      }
+
       table {
         font-size: 14.5px;
-        min-width: 540px;
+        min-width: 500px;
       }
 
       th, td {
-        padding: 10px 14px;
+        padding: 10px 8px;
       }
     }
   </style>
