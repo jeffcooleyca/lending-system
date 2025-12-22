@@ -23,13 +23,8 @@
       align-items: center;
     }
 
-    .collapsible::after {
-      content: '+';
-    }
-
-    .collapsible.active::after {
-      content: '−';
-    }
+    .collapsible::after { content: '+'; }
+    .collapsible.active::after { content: '−'; }
 
     .content {
       display: none;
@@ -41,17 +36,15 @@
       width: 90%;
       max-width: 600px;
       margin: 10px auto 30px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
-    /* ===== Table ===== */
+    /* ===== Desktop / Tablet table ===== */
     table {
       width: 100%;
       border-collapse: collapse;
       background: white;
       font-size: 14px;
-      table-layout: fixed; /* REQUIRED */
+      table-layout: fixed;
     }
 
     th, td {
@@ -65,51 +58,77 @@
       color: white;
     }
 
-    /* ===== Column behavior ===== */
-
-    /* 工具名 — flexible, wraps */
+    /* 工具名 */
     th:nth-child(1),
     td:nth-child(1) {
-      width: auto;
       white-space: normal;
       word-break: break-word;
-      overflow-wrap: anywhere;
     }
 
-    /* 数量 / 基本数 — HARD LOCK */
+    /* 数量 / 基本数 */
     th:nth-child(2),
     td:nth-child(2),
     th:nth-child(3),
     td:nth-child(3) {
-      width: 64px;
-      min-width: 64px;
-      max-width: 64px;
+      width: 72px;
       text-align: center;
       white-space: nowrap;
     }
 
     tr.alert {
-      background-color: #ffe5e5; /* 不足時 */
+      background-color: #ffe5e5;
     }
 
-    /* ===== Mobile optimization ===== */
+    /* ===== Phone layout (stacked rows) ===== */
     @media screen and (max-width: 480px) {
-      table {
-        font-size: 12px;
+
+      table,
+      thead,
+      tbody,
+      tr {
+        display: block;
+        width: 100%;
       }
 
-      th, td {
-        padding: 4px 6px;
+      thead {
+        display: none;
       }
 
-      /* tighter numeric columns for portrait */
-      th:nth-child(2),
-      td:nth-child(2),
-      th:nth-child(3),
-      td:nth-child(3) {
-        width: 56px;
-        min-width: 56px;
-        max-width: 56px;
+      tr {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 8px;
+        margin-bottom: 8px;
+        background: white;
+      }
+
+      tr.alert {
+        background-color: #ffe5e5;
+      }
+
+      td {
+        display: block;
+        border: none;
+        padding: 4px 0;
+        font-size: 13px;
+      }
+
+      /* 工具名 */
+      td:nth-child(1) {
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      /* 数量 */
+      td:nth-child(2)::before {
+        content: "数量: ";
+        font-weight: bold;
+      }
+
+      /* 基本数 */
+      td:nth-child(3)::before {
+        content: "基本数: ";
+        font-weight: bold;
       }
     }
   </style>
