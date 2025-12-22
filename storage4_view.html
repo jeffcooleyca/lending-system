@@ -79,6 +79,28 @@
         padding: 4px 6px;
       }
     }
+
+/* ===== Portrait mode optimization ===== */
+@media screen and (max-width: 480px) {
+
+  /* hide low-priority columns */
+  th:nth-child(1),
+  td:nth-child(1),
+  th:nth-child(3),
+  td:nth-child(3) {
+    display: none;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 4px 6px;
+  }
+}
+
+
   </style>
 </head>
 
