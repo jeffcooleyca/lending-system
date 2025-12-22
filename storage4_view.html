@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
   <style>
     body {
       font-family: sans-serif;
@@ -50,30 +50,42 @@
       padding: 10px 0;
     }
 
-    /* ===== Table wrapper for horizontal scroll on mobile ===== */
+    /* ===== Horizontal scrolling table wrapper ===== */
     .table-wrapper {
-      width: 90%;
-      max-width: 600px;
+      width: 95%;
+      max-width: 700px;
       margin: 10px auto 30px;
-      overflow-x: auto;                  /* Enables horizontal scrolling */
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background: white;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     table {
       width: 100%;
-      min-width: 480px;                  /* Forces columns to stay side-by-side */
-      border-collapse: collapse;
+      min-width: 500px;          /* Wide enough to keep all 3 columns side-by-side */
+      border-collapse: separate;
+      border-spacing: 0;
       background: white;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     th, td {
       border: 1px solid #ccc;
-      padding: 8px 10px;
+      border-left: none;
+      border-top: none;
+      padding: 10px 12px;
       text-align: left;
-      white-space: nowrap;               /* Prevents wrapping inside cells */
+      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child {
+      border-left: 1px solid #ccc;
+    }
+
+    tr:last-child td {
+      border-bottom: 1px solid #ccc;
     }
 
     th {
@@ -88,21 +100,26 @@
       background-color: #ffe5e5;
     }
 
-    /* ===== Mobile adjustments ===== */
+    /* ===== Mobile specific tweaks ===== */
     @media screen and (max-width: 480px) {
       .collapsible {
         width: 95%;
         font-size: 1rem;
       }
+
       .table-wrapper {
-        width: 95%;
+        width: 100%;
+        margin: 10px auto 30px;
+        border-radius: 6px;
       }
+
       table {
-        font-size: 13px;
-        min-width: 450px;
+        font-size: 14px;
+        min-width: 480px;
       }
+
       th, td {
-        padding: 6px 8px;
+        padding: 8px 10px;
       }
     }
   </style>
@@ -153,6 +170,7 @@
   async function loadInventory() {
     try {
       const res = await fetch(apiUrl);
+      if (!res.ok) throw new Error('Network error');
       const data = await res.json();
 
       const area1Body = document.getElementById('area1Body');
@@ -184,6 +202,7 @@
       });
     } catch (err) {
       console.error('Failed to load inventory:', err);
+      alert('在庫データの読み込みに失敗しました。');
     }
   }
 
@@ -192,15 +211,11 @@
     button.addEventListener('click', () => {
       button.classList.toggle('active');
       const content = button.nextElementSibling;
-      if (content.style.display === 'block') {
-        content.style.display = 'none';
-      } else {
-        content.style.display = 'block';
-      }
+      content.style.display = content.style.display === 'block' ? 'none' : 'block';
     });
   });
 
-  // Load data on page load
+  // Load data when page loads
   loadInventory();
 </script>
 </body>
