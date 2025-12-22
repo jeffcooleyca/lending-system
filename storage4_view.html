@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css?v=8">
 
   <style>
-    /* Collapsible headers */
+    /* ===== Collapsible headers ===== */
     .collapsible {
       background-color: #2a5298;
       color: white;
@@ -15,20 +15,19 @@
       padding: 12px 18px;
       width: 90%;
       max-width: 600px;
-      margin: 20px auto 0 auto;
+      margin: 20px auto 0;
       border-radius: 8px;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .collapsible:after {
+    .collapsible::after {
       content: '+';
-      font-size: 1.2rem;
     }
 
-    .collapsible.active:after {
+    .collapsible.active::after {
       content: '−';
     }
 
@@ -38,6 +37,13 @@
     }
 
     /* ===== Table ===== */
+    .table-wrapper {
+      width: 90%;
+      max-width: 600px;
+      margin: 10px auto 30px;
+      overflow-x: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -47,9 +53,8 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+      padding: 6px 8px;
       text-align: left;
-      white-space: nowrap;
     }
 
     th {
@@ -58,19 +63,11 @@
     }
 
     tr.alert {
-      background-color: #ffe5e5; /* 点検用アラート */
+      background-color: #ffe5e5; /* 不足時 */
     }
 
-    /* ===== Mobile table fix ===== */
-    .table-wrapper {
-      width: 90%;
-      max-width: 600px;
-      margin: 10px auto 30px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    @media screen and (max-width: 768px) {
+    /* ===== Mobile optimization ===== */
+    @media screen and (max-width: 480px) {
       table {
         font-size: 12px;
       }
@@ -79,28 +76,6 @@
         padding: 4px 6px;
       }
     }
-
-/* ===== Portrait mode optimization ===== */
-@media screen and (max-width: 480px) {
-
-  /* hide low-priority columns */
-  th:nth-child(1),
-  td:nth-child(1),
-  th:nth-child(3),
-  td:nth-child(3) {
-    display: none;
-  }
-
-  table {
-    font-size: 12px;
-  }
-
-  th, td {
-    padding: 4px 6px;
-  }
-}
-
-
   </style>
 </head>
 
@@ -115,9 +90,7 @@
       <table>
         <thead>
           <tr>
-            <th>管理ID</th>
             <th>工具名</th>
-            <th>番号</th>
             <th>数量</th>
             <th>基本数</th>
           </tr>
@@ -134,9 +107,7 @@
       <table>
         <thead>
           <tr>
-            <th>管理ID</th>
             <th>工具名</th>
-            <th>番号</th>
             <th>数量</th>
             <th>基本数</th>
           </tr>
@@ -164,16 +135,18 @@ async function loadInventory() {
   data.forEach(item => {
     const row = document.createElement('tr');
 
-    if (item.qty < item.baseQty) {
+    const qty = Number(item.qty);
+    const baseQty = Number(item.baseQty);
+
+    // 🔴 alert only when both exist AND qty < base
+    if (!isNaN(qty) && !isNaN(baseQty) && qty < baseQty) {
       row.classList.add('alert');
     }
 
     row.innerHTML = `
-      <td>${item.id || ''}</td>
       <td>${item.name}</td>
-      <td>${item.number || ''}</td>
-      <td>${item.qty}</td>
-      <td>${item.baseQty}</td>
+      <td>${item.qty ?? ''}</td>
+      <td>${item.baseQty ?? ''}</td>
     `;
 
     if (item.location === 'エリア１') {
