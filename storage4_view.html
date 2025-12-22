@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=17"> <!-- Your shared stylesheet remains untouched -->
+  <link rel="stylesheet" href="styles.css?v=18"> <!-- Your shared stylesheet remains untouched -->
   <style>
     body {
       font-family: sans-serif;
@@ -103,7 +103,7 @@
       }
     }
 
-    /* Mobile Portrait only (≤ 480px): horizontal scroll, columns stay on one row */
+    /* Mobile Portrait only (≤ 480px): reduced scrolling for shorter tool names */
     @media screen and (max-width: 480px) {
       .collapsible {
         width: 95%;
@@ -118,13 +118,13 @@
 
       .inventory-table {
         width: auto;            /* Let it grow naturally */
-        min-width: 480px;       /* Force 3 columns side-by-side → swipe needed */
-        font-size: 14.5px;
+        min-width: 380px;       /* Reduced from 480px — much less scrolling with shorter names */
+        font-size: 15px;        /* Comfortable readable text size */
       }
 
       .inventory-table th,
       .inventory-table td {
-        padding: 10px 8px !important;
+        padding: 12px 10px !important;  /* Generous padding for better readability */
       }
     }
   </style>
