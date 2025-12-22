@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STORAGE4 Inventory</title>
+  <title>STORAGE4 在庫一覧</title>
   <link rel="stylesheet" href="styles.css?v=8">
 
   <style>
@@ -23,8 +23,13 @@
       align-items: center;
     }
 
-    .collapsible::after { content: '+'; }
-    .collapsible.active::after { content: '−'; }
+    .collapsible::after {
+      content: '+';
+    }
+
+    .collapsible.active::after {
+      content: '−';
+    }
 
     .content {
       display: none;
@@ -43,20 +48,14 @@
       width: 100%;
       border-collapse: collapse;
       background: white;
-      table-layout: fixed; /* 🔑 important */
       font-size: 14px;
+      table-layout: fixed; /* ← important */
     }
-
-    /* Column sizing */
-    col.col-name { width: 60%; }
-    col.col-qty  { width: 20%; }
-    col.col-base { width: 20%; }
 
     th, td {
       border: 1px solid #ccc;
       padding: 6px 8px;
       text-align: left;
-      white-space: nowrap;
     }
 
     th {
@@ -64,45 +63,53 @@
       color: white;
     }
 
-    /* Center numeric columns */
+    /* ===== Column width control ===== */
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 55%;
+      white-space: normal; /* allow wrap for long names */
+    }
+
     th:nth-child(2),
-    th:nth-child(3),
     td:nth-child(2),
+    th:nth-child(3),
     td:nth-child(3) {
+      width: 22.5%;
       text-align: center;
+      white-space: nowrap;
     }
 
     tr.alert {
-      background-color: #ffe5e5;
+      background-color: #ffe5e5; /* 不足時 */
     }
 
     /* ===== Mobile optimization ===== */
     @media screen and (max-width: 480px) {
-      table { font-size: 12px; }
-      th, td { padding: 4px 6px; }
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 4px 6px;
+      }
     }
   </style>
 </head>
 
 <body>
 <main>
-  <h2>STORAGE4 Inventory</h2>
+  <h2>STORAGE4 在庫一覧</h2>
 
-  <!-- Area 1 -->
-  <button type="button" class="collapsible">Area 1 – Ladders / Hoses</button>
+  <!-- エリア1 -->
+  <button type="button" class="collapsible">エリア１－脚立・ホース</button>
   <div class="content">
     <div class="table-wrapper">
       <table>
-        <colgroup>
-          <col class="col-name">
-          <col class="col-qty">
-          <col class="col-base">
-        </colgroup>
         <thead>
           <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Expected</th>
+            <th>工具名</th>
+            <th>数量</th>
+            <th>基本数</th>
           </tr>
         </thead>
         <tbody id="area1Body"></tbody>
@@ -110,21 +117,16 @@
     </div>
   </div>
 
-  <!-- Area 2 -->
-  <button type="button" class="collapsible">Area 2 – Cones / Bars</button>
+  <!-- エリア2 -->
+  <button type="button" class="collapsible">エリア２－コーン・バー</button>
   <div class="content">
     <div class="table-wrapper">
       <table>
-        <colgroup>
-          <col class="col-name">
-          <col class="col-qty">
-          <col class="col-base">
-        </colgroup>
         <thead>
           <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Expected</th>
+            <th>工具名</th>
+            <th>数量</th>
+            <th>基本数</th>
           </tr>
         </thead>
         <tbody id="area2Body"></tbody>
@@ -172,11 +174,12 @@ async function loadInventory() {
 }
 
 // collapsible logic
-document.querySelectorAll('.collapsible').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('active');
-    const content = btn.nextElementSibling;
-    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+document.querySelectorAll('.collapsible').forEach(button => {
+  button.addEventListener('click', () => {
+    button.classList.toggle('active');
+    const content = button.nextElementSibling;
+    content.style.display =
+      content.style.display === 'block' ? 'none' : 'block';
   });
 });
 
