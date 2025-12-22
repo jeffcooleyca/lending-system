@@ -14,7 +14,7 @@
     <button onclick="goTo('borrow')">貸出 / Borrow</button>
     <button onclick="goTo('return')">返却 / Return</button>
     <button onclick="goTo('adjust')">調整 / Adjust</button>
-    <button onclick="goTo("window.location.href='storage4_view.html'")">在庫を見る / View Inventory</button>
+    <button onclick="window.location.href='storage4_view.html'">在庫を見る / View Inventory</button>
 
     <!-- ロゴ / Company Logo -->
     <div style="margin-top:40px;">
@@ -32,15 +32,9 @@
   </script>
 
 <script>
-  function goTo(target) {
-    // Direct HTML navigation
-    if (target.endsWith('.html')) {
-      window.location.href = target;
-    } else {
-      // Action-based routing (borrow / return / adjust)
-      window.location.href = `storage.html?action=${target}`;
+    function goTo(action) {
+      window.location.href = `${action}.html`;
     }
-  }
 </script>
 
 </body>
