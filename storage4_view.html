@@ -118,13 +118,9 @@ async function loadInventory() {
   data.forEach(item => {
     const row = document.createElement('tr');
 
-    const qty = Number(item.qty);
-    const baseQty = Number(item.baseQty);
-
-    if (!isNaN(qty) && !isNaN(baseQty) && baseQty > 0 && qty < baseQty) {
+    if (item.qty < item.baseQty) {
       row.classList.add('alert');
     }
-
 
     row.innerHTML = `
       <td>${item.id || ''}</td>
