@@ -37,18 +37,19 @@
       padding: 10px 0;
     }
 
+    /* ===== Table ===== */
     table {
-      width: 90%;
-      max-width: 600px;
-      margin: 10px auto 30px;
+      width: 100%;
       border-collapse: collapse;
       background: white;
+      font-size: 14px;
     }
 
     th, td {
       border: 1px solid #ccc;
       padding: 8px;
       text-align: left;
+      white-space: nowrap;
     }
 
     th {
@@ -58,6 +59,25 @@
 
     tr.alert {
       background-color: #ffe5e5; /* 点検用アラート */
+    }
+
+    /* ===== Mobile table fix ===== */
+    .table-wrapper {
+      width: 90%;
+      max-width: 600px;
+      margin: 10px auto 30px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media screen and (max-width: 768px) {
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 4px 6px;
+      }
     }
   </style>
 </head>
@@ -69,35 +89,39 @@
   <!-- エリア1 -->
   <button type="button" class="collapsible">エリア１－脚立・ホース</button>
   <div class="content">
-    <table>
-      <thead>
-        <tr>
-          <th>管理ID</th>
-          <th>工具名</th>
-          <th>番号</th>
-          <th>数量</th>
-          <th>基本数</th>
-        </tr>
-      </thead>
-      <tbody id="area1Body"></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>管理ID</th>
+            <th>工具名</th>
+            <th>番号</th>
+            <th>数量</th>
+            <th>基本数</th>
+          </tr>
+        </thead>
+        <tbody id="area1Body"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- エリア2 -->
   <button type="button" class="collapsible">エリア２－コーン・バー</button>
   <div class="content">
-    <table>
-      <thead>
-        <tr>
-          <th>管理ID</th>
-          <th>工具名</th>
-          <th>番号</th>
-          <th>数量</th>
-          <th>基本数</th>
-        </tr>
-      </thead>
-      <tbody id="area2Body"></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>管理ID</th>
+            <th>工具名</th>
+            <th>番号</th>
+            <th>数量</th>
+            <th>基本数</th>
+          </tr>
+        </thead>
+        <tbody id="area2Body"></tbody>
+      </table>
+    </div>
   </div>
 </main>
 
