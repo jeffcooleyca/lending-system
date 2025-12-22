@@ -4,9 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=8">
-
+  <link rel="stylesheet" href="styles.css?v=9">
   <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px 0;
+    }
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    h2 {
+      text-align: center;
+      color: #2a5298;
+      margin-bottom: 30px;
+    }
+
     /* ===== Collapsible headers ===== */
     .collapsible {
       background-color: #2a5298;
@@ -16,30 +31,39 @@
       width: 90%;
       max-width: 600px;
       margin: 20px auto 0;
+      border: none;
       border-radius: 8px;
       font-size: 1.1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .collapsible::after { content: '+'; }
-    .collapsible.active::after { content: '−'; }
-
+    .collapsible::after {
+      content: '+';
+      font-size: 1.5rem;
+    }
+    .collapsible.active::after {
+      content: '−';
+    }
     .content {
       display: none;
       padding: 10px 0;
     }
 
-    /* ===== Table (desktop) ===== */
+    /* ===== Table wrapper for horizontal scroll on mobile ===== */
     .table-wrapper {
       width: 90%;
       max-width: 600px;
       margin: 10px auto 30px;
+      overflow-x: auto;                  /* Enables horizontal scrolling */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     table {
       width: 100%;
+      min-width: 480px;                  /* Forces columns to stay side-by-side */
       border-collapse: collapse;
       background: white;
       font-size: 14px;
@@ -47,65 +71,42 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 6px 8px;
+      padding: 8px 10px;
       text-align: left;
+      white-space: nowrap;               /* Prevents wrapping inside cells */
     }
 
     th {
       background: #2a5298;
       color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
 
     tr.alert {
       background-color: #ffe5e5;
     }
 
-    /* ===== Mobile stacked rows ===== */
+    /* ===== Mobile adjustments ===== */
     @media screen and (max-width: 480px) {
-
-      table,
-      thead,
-      tbody,
-      tr {
-        display: block;
+      .collapsible {
+        width: 95%;
+        font-size: 1rem;
       }
-
-      thead {
-        display: none;
+      .table-wrapper {
+        width: 95%;
       }
-
-      tr {
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-bottom: 10px;
-        padding: 6px;
-        background: white;
-      }
-
-      tr.alert {
-        background-color: #ffe5e5;
-      }
-
-      td {
-        display: flex;
-        justify-content: space-between;
-        border: none;
-        padding: 4px 0;
+      table {
         font-size: 13px;
+        min-width: 450px;
       }
-
-      td::before {
-        font-weight: bold;
-        color: #333;
+      th, td {
+        padding: 6px 8px;
       }
-
-      td:nth-child(1)::before { content: "工具名"; }
-      td:nth-child(2)::before { content: "数量"; }
-      td:nth-child(3)::before { content: "基本数"; }
     }
   </style>
 </head>
-
 <body>
 <main>
   <h2>STORAGE4 在庫一覧</h2>
@@ -146,54 +147,61 @@
 </main>
 
 <script>
-const apiUrl =
-  'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=STORAGE4';
+  const apiUrl =
+    'https://script.google.com/macros/s/AKfycbw3c4Cy9UKPcToj9sIPIaues2QaHFMiDq6mfJuZrFnLr91b-omPycecyHvIy-I6zzhOfw/exec?storage=STORAGE4';
 
-async function loadInventory() {
-  const res = await fetch(apiUrl);
-  const data = await res.json();
+  async function loadInventory() {
+    try {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
 
-  const area1Body = document.getElementById('area1Body');
-  const area2Body = document.getElementById('area2Body');
+      const area1Body = document.getElementById('area1Body');
+      const area2Body = document.getElementById('area2Body');
 
-  area1Body.innerHTML = '';
-  area2Body.innerHTML = '';
+      area1Body.innerHTML = '';
+      area2Body.innerHTML = '';
 
-  data.forEach(item => {
-    const row = document.createElement('tr');
+      data.forEach(item => {
+        const row = document.createElement('tr');
 
-    const qty = Number(item.qty);
-    const baseQty = Number(item.baseQty);
+        const qty = Number(item.qty);
+        const baseQty = Number(item.baseQty);
+        if (!isNaN(qty) && !isNaN(baseQty) && qty < baseQty) {
+          row.classList.add('alert');
+        }
 
-    if (!isNaN(qty) && !isNaN(baseQty) && qty < baseQty) {
-      row.classList.add('alert');
+        row.innerHTML = `
+          <td>${item.name || ''}</td>
+          <td>${item.qty ?? ''}</td>
+          <td>${item.baseQty ?? ''}</td>
+        `;
+
+        if (item.location === 'エリア１') {
+          area1Body.appendChild(row);
+        } else if (item.location === 'エリア２') {
+          area2Body.appendChild(row);
+        }
+      });
+    } catch (err) {
+      console.error('Failed to load inventory:', err);
     }
+  }
 
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.qty ?? ''}</td>
-      <td>${item.baseQty ?? ''}</td>
-    `;
-
-    if (item.location === 'エリア１') {
-      area1Body.appendChild(row);
-    } else if (item.location === 'エリア２') {
-      area2Body.appendChild(row);
-    }
+  // Collapsible logic
+  document.querySelectorAll('.collapsible').forEach(button => {
+    button.addEventListener('click', () => {
+      button.classList.toggle('active');
+      const content = button.nextElementSibling;
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+      } else {
+        content.style.display = 'block';
+      }
+    });
   });
-}
 
-// collapsible logic
-document.querySelectorAll('.collapsible').forEach(button => {
-  button.addEventListener('click', () => {
-    button.classList.toggle('active');
-    const content = button.nextElementSibling;
-    content.style.display =
-      content.style.display === 'block' ? 'none' : 'block';
-  });
-});
-
-loadInventory();
+  // Load data on page load
+  loadInventory();
 </script>
 </body>
 </html>
