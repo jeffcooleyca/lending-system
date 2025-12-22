@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STORAGE4 在庫一覧</title>
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15"> <!-- Keep your shared styles -->
   <style>
+    /* Your normal styles (collapsible, etc.) */
     body {
       font-family: sans-serif;
       background-color: #f5f7fa;
@@ -22,7 +23,6 @@
       margin-bottom: 30px;
     }
 
-    /* ===== Collapsible headers ===== */
     .collapsible {
       background-color: #2a5298;
       color: white;
@@ -38,20 +38,12 @@
       justify-content: space-between;
       align-items: center;
     }
-    .collapsible::after {
-      content: '+';
-      font-size: 1.5rem;
-    }
-    .collapsible.active::after {
-      content: '−';
-    }
-    .content {
-      display: none;
-      padding: 10px 0;
-    }
+    .collapsible::after { content: '+'; font-size: 1.5rem; }
+    .collapsible.active::after { content: '−'; }
+    .content { display: none; padding: 10px 0; }
 
-    /* ===== Scrollable table wrapper ===== */
-    .table-wrapper {
+    /* ===== UNIQUE CLASS FOR THIS PAGE ONLY ===== */
+    .inventory-table-wrapper {
       width: 100%;
       max-width: 700px;
       margin: 10px auto 30px;
@@ -62,67 +54,68 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    table {
+    .inventory-table {
       width: 100%;
-      min-width: 520px;                  /* Balanced width for portrait */
+      min-width: 520px;
       border-collapse: collapse;
       background: white;
       font-size: 15px;
     }
 
-    th, td {
-      border: 1px solid #ccc;
-      padding: 12px 10px;
+    .inventory-table th,
+    .inventory-table td {
+      border: 1px solid #ccc !important;
+      padding: 12px 10px !important;
       text-align: center;
-      white-space: nowrap;
+      white-space: nowrap !important;
+      display: table-cell !important;
     }
 
-    /* Tool name column gets more space */
-    th:first-child, td:first-child {
+    .inventory-table th:first-child,
+    .inventory-table td:first-child {
       text-align: left;
       width: 60%;
     }
 
-    th:nth-child(2), td:nth-child(2) {
+    .inventory-table th:nth-child(2),
+    .inventory-table td:nth-child(2),
+    .inventory-table th:nth-child(3),
+    .inventory-table td:nth-child(3) {
       width: 20%;
     }
 
-    th:nth-child(3), td:nth-child(3) {
-      width: 20%;
-    }
-
-    thead th {
-      background: #2a5298;
-      color: white;
+    .inventory-table thead th {
+      background: #2a5298 !important;
+      color: white !important;
       position: sticky;
       top: 0;
       z-index: 10;
     }
 
-    tr.alert {
-      background-color: #ffe5e5;
+    .inventory-table tr.alert {
+      background-color: #ffe5e5 !important;
     }
 
-    /* Mobile portrait tweaks */
+    /* Mobile tweaks */
     @media screen and (max-width: 480px) {
-      .collapsible {
-        width: 95%;
-        font-size: 1rem;
-      }
+      .collapsible { width: 95%; font-size: 1rem; }
+      .inventory-table { font-size: 14.5px; min-width: 500px; }
+      .inventory-table th,
+      .inventory-table td { padding: 10px 8px !important; }
+    }
 
-      .table-wrapper {
-        width: 100%;
-        border-radius: 6px;
-      }
-
-      table {
-        font-size: 14.5px;
-        min-width: 500px;
-      }
-
-      th, td {
-        padding: 10px 8px;
-      }
+    /* Nuclear override: force normal table display no matter what styles.css says */
+    .inventory-table,
+    .inventory-table thead,
+    .inventory-table tbody,
+    .inventory-table tr,
+    .inventory-table th,
+    .inventory-table td {
+      display: table !important;
+      display: table-header-group !important;
+      display: table-row-group !important;
+      display: table-row !important;
+      display: table-cell !important;
     }
   </style>
 </head>
@@ -133,8 +126,8 @@
   <!-- エリア1 -->
   <button type="button" class="collapsible">エリア１－脚立・ホース</button>
   <div class="content">
-    <div class="table-wrapper">
-      <table>
+    <div class="inventory-table-wrapper">
+      <table class="inventory-table">
         <thead>
           <tr>
             <th>工具名</th>
@@ -150,8 +143,8 @@
   <!-- エリア2 -->
   <button type="button" class="collapsible">エリア２－コーン・バー</button>
   <div class="content">
-    <div class="table-wrapper">
-      <table>
+    <div class="inventory-table-wrapper">
+      <table class="inventory-table">
         <thead>
           <tr>
             <th>工具名</th>
@@ -183,7 +176,6 @@
 
       data.forEach(item => {
         const row = document.createElement('tr');
-
         const qty = Number(item.qty);
         const baseQty = Number(item.baseQty);
         if (!isNaN(qty) && !isNaN(baseQty) && qty < baseQty) {
